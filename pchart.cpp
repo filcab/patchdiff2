@@ -1,0 +1,239 @@
+/* 
+   Patchdiff2
+   Portions (C) 2010 Nicolas Pouvesle
+   Portions (C) 2007 - 2009 Tenable Network Security, Inc.
+   
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License version 2 as 
+   published by the Free Software Foundation.
+   
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+#include <stack>
+
+#include <pro.h>
+#include <ida.hpp>
+#include <funcs.hpp>
+#include <gdl.hpp>
+#include <xref.hpp>
+
+#include "pchart.hpp"
+#include "patchdiff.hpp"
+#include "x86.hpp"
+
+using namespace std;
+
+extern cpu_t patchdiff_cpu;
+
+
+ea_t get_fake_jump(ea_t ea)
+{
+	switch(patchdiff_cpu)
+	{
+	case CPU_X8632:
+	case CPU_X8664:
+		return x86_get_fake_jump(ea);
+	default:
+		return BADADDR;
+	}
+}
+
+
+bool is_end_block(ea_t ea)
+{
+	switch(patchdiff_cpu)
+	{
+	case CPU_X8632:
+	case CPU_X8664:
+		return x86_is_end_block(ea);
+	default:
+		return false;
+	}
+}
+
+
+bool pflow_chart_t::getJump(func_t * fct, qvector<ea_t> & list, pbasic_block_t & bl)
+{
+	xrefblk_t xb;
+	cref_t cr;
+	bool b, j, flow;
+	qvector<pedge_t> tmp;
+	ea_t tea, ea = bl.endEA, end;
+	flags_t f;
+	size_t k;
+	int type;
+
+	j = flow = false;
+
+	end = get_item_end(ea);
+
+	b = xb.first_from(ea, XREF_ALL);
+	f = getFlags(ea);
+	while (b)
+	{
+		cr = (cref_t)xb.type;
+		if (xb.iscode && (cr == fl_JF || cr == fl_JN || cr == fl_F))
+		{
+			pedge_t ed;
+
+			if (cr == fl_JF || cr == fl_JN)
+			{
+				j = true;
+				type = 1;
+			}
+			else if (! (f & FF_JUMP))
+			{
+				flow = true;
+				type = 2;
+			}
+
+			if (patchdiff_cpu == CPU_X8632 || patchdiff_cpu == CPU_X8664 || get_func_chunknum(fct, xb.to) >= 0)
+			{
+				ed.ea = xb.to;
+				ed.type = type;
+
+				if (ed.ea == end)
+					tmp.insert(tmp.begin(), ed);
+				else
+					tmp.push_back(ed);
+			}
+		}
+
+		b = xb.next_from();
+	}
+
+	tea = get_fake_jump(ea);
+	if (tea != BADADDR)
+	{
+		pedge_t ed;
+
+		j = true;
+		ed.ea = tea;
+		ed.type = 1;
+	}
+
+	if (j)
+	{
+		for (k=0; k<tmp.size(); k++)
+		{
+			pedge_t ed;
+
+			ed.ea = tmp[k].ea;
+			if (flow)
+				ed.type = tmp[k].type;
+			else
+				ed.type = 3;
+
+			if (xb.to != bl.startEA)
+				list.push_back(tmp[k].ea);
+
+			bl.succ.push_back(ed);
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+
+bool pflow_chart_t::check_address(ea_t ea)
+{
+	size_t i;
+
+	for (i=0; i<blocks.size(); i++)
+	{
+		if (blocks[i].startEA == ea)
+			return true;
+
+		if (ea > blocks[i].startEA && ea < blocks[i].endEA)
+		{
+			pbasic_block_t bl;
+			pedge_t ed;
+
+			bl.startEA = ea;
+			bl.endEA = blocks[i].endEA;
+			bl.succ = blocks[i].succ;
+
+			blocks[i].endEA = ea;
+			blocks[i].succ.clear();
+
+			ed.ea = ea;
+			ed.type = 3;
+			blocks[i].succ.push_back(ed);
+
+			blocks.push_back(bl);
+
+			return true;
+		}
+	}
+
+
+	return false;
+}
+
+
+pflow_chart_t::pflow_chart_t(func_t * fct)
+{
+	ea_t ea;
+	qvector<ea_t> to_trace;
+	bool cont;
+	flags_t f;
+
+	to_trace.push_back(fct->startEA);
+
+	while (!to_trace.empty())
+	{
+		ea = to_trace.front();
+		to_trace.erase(to_trace.begin());
+
+		if (check_address(ea))
+			continue;
+
+		pbasic_block_t bl;
+
+		bl.startEA = ea;
+		bl.endEA = ea;
+		cont = true;
+
+		while(cont)
+		{
+			ea = bl.endEA;
+			f = getFlags(ea);
+
+			if ( (!isFlow(f) && (ea != bl.startEA)) || !isCode(f) )
+				break;
+
+			if ( check_address(ea) )
+			{
+				pedge_t ed;
+
+				ed.ea = ea;
+				ed.type = 3;
+
+				bl.succ.push_back(ed);
+				break;
+			}
+
+			if ( getJump(fct, to_trace, bl) )
+				cont = false;
+
+			if ( is_end_block(ea) )
+				break;
+
+			bl.endEA = get_item_end(ea);
+		}
+
+		blocks.push_back(bl);
+	}
+
+	nproper = blocks.size();
+}

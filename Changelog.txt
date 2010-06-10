@@ -1,0 +1,68 @@
+PatchDiff v2.0.8:
+
+* Adds Flag/Unflag feature for the 'matched' list to keep track of analyzed functions
+
+
+PatchDiff v2.0.7:
+
+* Properly fixes an issue where a int -> to unsigned int would not be detected
+* Adds dock support to display graphs (IDA >= 5.6)
+
+
+PatchDiff v2.0.6:
+
+* Switchs to graph call for checksum instead of instruction frequency
+* Removes invalid C++ classes/structs flagged as functions
+
+
+PatchDiff v2.0.5:
+
+* Adds string references to the signature
+* Fixes IPC close when option is disabled
+
+
+PatchDiff v2.0.4:
+
+* Requires at least IDA 5.2
+* Adds save backup results to IDB
+* Adds Unmatch/Set match/Switch match submenus
+* Adds "pipe" support to keep second IDA instance open 
+  - menu Options/PatchDiff2 to disable/enable it per IDB
+  - registry HKLM\SOFTWARE\Tenable\PatchDiff2 IPC (DWORD) for the default setting
+* Uses demangled function names
+* Ignores duplicated names
+
+
+PatchDiff v2.0.3:
+
+* Adds support for C++ classes in the signature engine (improves results against c++ targets)
+* No longer relies on IDA code refs (due to bad references)
+* x86: merges inc reg and dec reg to one instruction
+* x86: handles jmp $2/$5
+* x86: stops block tracing on int3
+* Bugfix: Does not try to display graphs that IDA can't handle
+
+
+PatchDiff v2.0.2:
+
+* Adds support for IDA 5.1
+* Excludes data ref with segment reference from crc
+* Adds PPC optimization module
+* Relies on IDA to identify opcode for non optimized CPUs
+* Adds display graph option for unmatched functions
+* Adds x86 rep/repe/repne 16 bit compiler change optimization
+* Improves edge double click handling
+
+
+PatchDiff v2.0.1:
+
+* Increases the size of the command buffer (for long IDB paths)
+* Synchronizes graphs on edge double-click
+* Adds line address in the graph if the option is set in IDA
+* Fixes graph block matching to produce much better results
+* Uses %a for address
+
+
+PatchDiff v2.0.0:
+
+* Initial public release
