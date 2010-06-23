@@ -357,6 +357,45 @@ bool x86_convert_cond_jump(unsigned char * byte, ea_t ea)
 
 
 /*------------------------------------------------*/
+/* function : x86_convert_cond_jump               */
+/* arguments: unsigned char val, instr address    */
+/* description: converts byte if instruction is a */
+/*              conditionnal jump. If jnz returns */
+/*              jz, if jne return je, ...         */
+/*------------------------------------------------*/
+
+int x86_is_cond_jump_pos(ea_t ea)
+{
+	unsigned char byte2 = get_byte(ea);
+
+	if (byte2 == 0x0F)
+	{
+		byte2 = get_byte(ea+1) - 0x10;
+	}
+
+	if (byte2 >= 0x70 && byte2 <= 0x7F)
+	{
+		switch (byte2)
+		{
+		case 0x77: //ja
+		case 0x72: //jb
+		case 0x74: //jz
+		case 0x7F: //jg
+		case 0x7C: //jl
+		case 0x70: //jo
+		case 0x7A: //jp
+		case 0x78: //js
+			return 1;
+		default:
+			return 2;
+		}
+	}
+
+	return 0;
+}
+
+
+/*------------------------------------------------*/
 /* function : x86_get_fake_jump                   */
 /* arguments: ea_t ea                             */
 /* description: Returns jump for jump $5/$2       */

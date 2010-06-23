@@ -59,6 +59,25 @@ bool is_end_block(ea_t ea)
 	}
 }
 
+ea_t get_direct_jump(ea_t ea)
+{
+	xrefblk_t xb;
+	bool b;
+
+	switch(patchdiff_cpu)
+	{
+	case CPU_X8632:
+	case CPU_X8664:
+		if (x86_is_direct_jump(ea))
+		{
+			b = xb.first_from(ea, XREF_ALL);
+			if (b) return xb.to;
+		}
+	default:
+		return BADADDR;
+	}
+}
+
 
 bool pflow_chart_t::getJump(func_t * fct, qvector<ea_t> & list, pbasic_block_t & bl)
 {
@@ -66,10 +85,12 @@ bool pflow_chart_t::getJump(func_t * fct, qvector<ea_t> & list, pbasic_block_t &
 	cref_t cr;
 	bool b, j, flow;
 	qvector<pedge_t> tmp;
-	ea_t tea, ea = bl.endEA, end;
+	qvector<pedge_t>::iterator pos;
+	ea_t tea, ea = bl.endEA, end, jaddr;
 	flags_t f;
 	size_t k;
 	int type;
+	int cond;
 
 	j = flow = false;
 
@@ -77,6 +98,8 @@ bool pflow_chart_t::getJump(func_t * fct, qvector<ea_t> & list, pbasic_block_t &
 
 	b = xb.first_from(ea, XREF_ALL);
 	f = getFlags(ea);
+	cond = x86_is_cond_jump_pos(ea);
+
 	while (b)
 	{
 		cr = (cref_t)xb.type;
@@ -97,13 +120,25 @@ bool pflow_chart_t::getJump(func_t * fct, qvector<ea_t> & list, pbasic_block_t &
 
 			if (patchdiff_cpu == CPU_X8632 || patchdiff_cpu == CPU_X8664 || get_func_chunknum(fct, xb.to) >= 0)
 			{
-				ed.ea = xb.to;
+				jaddr = get_direct_jump(xb.to);
+				if (jaddr == BADADDR)
+					ed.ea = xb.to;
+				else
+					ed.ea = jaddr;
+
 				ed.type = type;
 
-				if (ed.ea == end)
-					tmp.insert(tmp.begin(), ed);
-				else
-					tmp.push_back(ed);
+				pos = tmp.end();
+
+				if (patchdiff_cpu == CPU_X8632 || patchdiff_cpu == CPU_X8664)
+				{
+					if ( (cond == 1 && cr != fl_F) || (cond == 2 && cr == fl_F) )
+						pos = tmp.begin();
+				}
+				else if (ed.ea == end)
+					pos = tmp.begin();
+
+				tmp.insert(pos, ed);
 			}
 		}
 

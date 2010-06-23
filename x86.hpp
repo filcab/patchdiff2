@@ -26,5 +26,6 @@ bool x86_remove_instr(unsigned char, ea_t);
 bool x86_is_end_block(ea_t);
 bool x86_is_direct_jump(ea_t ea);
 ea_t x86_get_fake_jump(ea_t);
+int x86_is_cond_jump_pos(ea_t);
 
 #endif
