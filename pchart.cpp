@@ -70,7 +70,7 @@ ea_t get_direct_jump(ea_t ea)
 	case CPU_X8664:
 		if (x86_is_direct_jump(ea))
 		{
-			b = xb.first_from(ea, XREF_ALL);
+			b = xb.first_from(ea, XREF_FAR);
 			if (b) return xb.to;
 		}
 	default:
