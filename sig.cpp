@@ -668,21 +668,23 @@ int sig_add_block(sig_t * sig, short opcodes[256], ea_t startEA, ea_t endEA, boo
 	ea_t ea;
 	flags_t flags;
 	bool b;
+	int num = 0;
 
 	ea = startEA;
 	while (ea < endEA)
 	{
 		flags = getFlags (ea);
 		if (!isCode (flags))
-			return -1;
+			return num;
 
 		b = get_first_dref_from(ea) != BADADDR ? true : false;
-		sig_add_address(sig, opcodes, ea, isOff(flags, OPND_ALL) || b, line, options);
+		if (sig_add_address(sig, opcodes, ea, isOff(flags, OPND_ALL) || b, line, options) != -1)
+			num++;
 
 		ea += get_item_size(ea);
 	}
 
-	return 0;
+	return num;
 }
 
 
@@ -827,6 +829,92 @@ sig_t * sig_class_generate(ea_t ea)
 
 
 /*------------------------------------------------*/
+/* function : find_pflow_chart_pos                */
+/* description: finds the position of a block in  */
+/*              the chart by his startEA          */
+/*------------------------------------------------*/
+
+int find_pflow_chart_pos(pflow_chart_t * fchart, ea_t ea)
+{
+	int i;
+
+	for (i=0; i<fchart->nproper; i++)
+		if (fchart->blocks[i].startEA == ea) return i;
+
+	return -1;
+}
+
+
+ea_t get_direct_jump(ea_t ea)
+{
+	xrefblk_t xb;
+	cref_t cr;
+	bool b = xb.first_from(ea, XREF_FAR);
+    if (!b) return BADADDR;
+
+	cr = (cref_t)xb.type;
+	if (!(xb.iscode && (cr == fl_JF || cr == fl_JN || cr == fl_F))) return BADADDR;
+
+	switch(patchdiff_cpu)
+	{
+	case CPU_X8632:
+	case CPU_X8664:
+		if (x86_is_direct_jump(ea)) return xb.to;
+	default:
+		return BADADDR;
+	}
+}
+
+
+/*------------------------------------------------*/
+/* function : sig_add_gen_block                   */
+/* description: adds a block to the signature and */
+/*              the successor as long as it's a   */
+/*              direct jump (comp optimization)   */
+/*------------------------------------------------*/
+
+void sig_add_gen_block(sig_t * sig, short opcodes[256], pflow_chart_t * fchart, int pos, bool flag)
+{
+	int ret, smax, j, ttype; 
+	int next_pos;
+
+	if (pos < 0)
+		return;
+
+	smax = fchart->nsucc(pos);
+
+	ret = sig_add_block(sig, opcodes, fchart->blocks[pos].startEA, fchart->blocks[pos].endEA, 0, 0);
+	fchart->blocks[pos].flagged = 1;
+
+	if (ret > 0)
+	{
+		if (smax == 1)
+		{
+			next_pos = find_pflow_chart_pos(fchart, fchart->blocks[pos].succ[0].ea);
+			sig_add_gen_block(sig, opcodes, fchart, next_pos, false);
+			}
+		}
+		else
+		{
+			sig->sig += smax; //(pos+1) + smax*pos;
+			for(j=0; j<smax; j++)
+			{
+				ttype = fchart->blocks[pos].succ[j].type;
+				if (ttype == 2) ttype--;
+				sig->hash += ttype;
+			}
+		}
+
+		if (flag)
+		{
+			//sig->sig += (pos+1) + smax*pos;
+			sig->hash = ror(sig->hash, 13);
+		}
+	}
+}
+
+
+/*------------------------------------------------*/
 /* function : sig_generate                        */
 /* description: generates a signature for the     */
 /*              given function                    */
@@ -901,18 +989,9 @@ sig_t * sig_generate(size_t fct_num, qvector<ea_t> & class_l)
 
 	for (i=0; i<bnum; i++)
 	{
-		int j;
-		int ttype;
-		int smax = fchart->nsucc(i);
-		sig->sig += (i+1) + smax*i;
-
-		sig_add_block(sig, opcodes, fchart->blocks[i].startEA, fchart->blocks[i].endEA, 0, 0);
-		for(j=0; j<smax; j++)
+		if (fchart->blocks[i].flagged == 0)
 		{
-			sig->hash = ror(sig->hash, 13);
-			ttype = fchart->blocks[i].succ[j].type;
-			if (ttype == 2) ttype--;
-			sig->hash += ttype;
+			sig_add_gen_block(sig, opcodes, fchart, i, false);
 		}
 	}
 

@@ -32,6 +32,7 @@ struct pedge_t
 
 struct pbasic_block_t : public area_t
 {
+  int flagged;
   qvector<pedge_t> succ; // list of node successors
   qvector<pedge_t> pred; // list of node predecessors
 };
