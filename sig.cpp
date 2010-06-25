@@ -892,7 +892,6 @@ void sig_add_gen_block(sig_t * sig, short opcodes[256], pflow_chart_t * fchart, 
 		{
 			next_pos = find_pflow_chart_pos(fchart, fchart->blocks[pos].succ[0].ea);
 			sig_add_gen_block(sig, opcodes, fchart, next_pos, false);
-			}
 		}
 		else
 		{
