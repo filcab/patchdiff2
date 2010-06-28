@@ -184,28 +184,28 @@ bool pflow_chart_t::getJump(func_t * fct, qvector<ea_t> & list, pbasic_block_t &
 
 bool pflow_chart_t::check_address(ea_t ea)
 {
-	size_t i;
+	qvector<pbasic_block_t>::iterator it;
 
-	for (i=0; i<blocks.size(); i++)
+	for (it=blocks.begin(); it<blocks.end(); it++)
 	{
-		if (blocks[i].startEA == ea)
+		if (it->startEA == ea)
 			return true;
 
-		if (ea > blocks[i].startEA && ea < blocks[i].endEA)
+		if (ea > it->startEA && ea < it->endEA)
 		{
 			pbasic_block_t bl;
 			pedge_t ed;
 
 			bl.startEA = ea;
-			bl.endEA = blocks[i].endEA;
-			bl.succ = blocks[i].succ;
+			bl.endEA = it->endEA;
+			bl.succ = it->succ;
 
-			blocks[i].endEA = ea;
-			blocks[i].succ.clear();
+			it->endEA = ea;
+			it->succ.clear();
 
 			ed.ea = ea;
 			ed.type = 3;
-			blocks[i].succ.push_back(ed);
+			it->succ.push_back(ed);
 
 			blocks.push_back(bl);
 
