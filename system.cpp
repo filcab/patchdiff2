@@ -111,6 +111,7 @@ bool ipc_init(char * file, int type, long id)
 				return false;
 
 			qtmpnam(tmpname, sizeof(tmpname));
+			tmpname[strlen(tmpname)-4] = '\0';
 			if (system_execute_second_instance(tmpname, BADADDR, file, false, pid, ipcc.data) != 0)
 			{
 				ipc_close();
@@ -253,6 +254,7 @@ slist_t * system_parse_idb(ea_t ea, char * file, options_t * opt)
 	char tmpname[QMAXPATH];
 
 	qtmpnam(tmpname, sizeof(tmpname));
+	tmpname[strlen(tmpname)-4] = '\0';
 
 	if (!options_use_ipc(opt))
 		system_execute_second_instance(tmpname, ea, file, true, 0, NULL);

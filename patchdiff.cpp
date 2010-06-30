@@ -17,6 +17,7 @@
 */
 
 
+#include <stdio.h>
 #include <ida.hpp>
 #include <loader.hpp>
 #include <kernwin.hpp>
