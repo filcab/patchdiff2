@@ -94,7 +94,7 @@ void run_first_instance()
 	int ret;
 
 	msg ("\n---------------------------------------------------\n"
-		"PatchDiff Plugin v2.0.8\n"
+		"PatchDiff Plugin v2.0.9\n"
 		"Copyright (c) 2010, Nicolas Pouvesle\n"
 		"Copyright (C) 2007-2009, Tenable Network Security, Inc\n"
 		"---------------------------------------------------\n\n");

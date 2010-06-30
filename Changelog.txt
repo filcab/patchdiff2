@@ -1,3 +1,8 @@
+PatchDiff v2.0.9:
+
+* Improves 'direct jump' detection (better compiler change detection in the next version)
+* Fixes tmp file issue with IDA 5.7
+
 PatchDiff v2.0.8:
 
 * Adds Flag/Unflag feature for the 'matched' list to keep track of analyzed functions
