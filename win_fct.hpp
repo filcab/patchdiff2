@@ -22,7 +22,6 @@
 
 #include "system.hpp"
 
-
 #ifdef __EA64__
 #define IDA_EXEC "idag64.exe"
 #else

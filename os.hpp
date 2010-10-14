@@ -19,6 +19,10 @@
 #ifndef __OS_H__
 #define __OS_H__
 
+#ifdef _WINDOWS
 #include "win_fct.hpp"
+#else
+#include "unix_fct.hpp"
+#endif
 
 #endif

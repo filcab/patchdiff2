@@ -40,6 +40,7 @@
 #include "ppc.hpp"
 #include "patchdiff.hpp"
 #include "pchart.hpp"
+#include "os.hpp"
 
 extern cpu_t patchdiff_cpu;
 
@@ -689,7 +690,7 @@ int sig_add_block(sig_t * sig, short opcodes[256], ea_t startEA, ea_t endEA, boo
 }
 
 
-int compare(const void *arg1, const void *arg2)
+int OS_CDECL compare(const void *arg1, const void *arg2)
 {
    return *((short *)arg1) - *((short *)arg2);
 }
@@ -1128,7 +1129,7 @@ bool siglist_realloc(slist_t * sl, size_t num)
 /* description: Compares two signature            */
 /*------------------------------------------------*/
 
-int sig_compare(const void *arg1, const void *arg2)
+int OS_CDECL sig_compare(const void *arg1, const void *arg2)
 {
 	unsigned long v1, v2;
 
