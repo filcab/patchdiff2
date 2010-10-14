@@ -163,7 +163,7 @@ int sig_add_pref(sig_t *, ea_t, int, char);
 int sig_add_sref(sig_t *, ea_t, int, char);
 clist_t * sig_get_crefs(sig_t *, int);
 void sig_set_crefs(sig_t *, int, clist_t *);
-int __cdecl sig_compare(const void *, const void *);
+int sig_compare(const void *, const void *);
 sig_t * sig_init();
 int sig_add_block(sig_t *, short *, ea_t, ea_t, bool, char);
 void sig_set_start(sig_t *, ea_t);
