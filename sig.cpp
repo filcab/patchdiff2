@@ -16,6 +16,9 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifdef NO_OBSOLETE_FUNCS
+#undef NO_OBSOLETE_FUNCS
+#endif
 
 #include <pro.h>
 #include <ida.hpp>
@@ -686,7 +689,7 @@ int sig_add_block(sig_t * sig, short opcodes[256], ea_t startEA, ea_t endEA, boo
 }
 
 
-int __cdecl compare(const void *arg1, const void *arg2)
+int compare(const void *arg1, const void *arg2)
 {
    return *((short *)arg1) - *((short *)arg2);
 }
@@ -1125,7 +1128,7 @@ bool siglist_realloc(slist_t * sl, size_t num)
 /* description: Compares two signature            */
 /*------------------------------------------------*/
 
-int __cdecl sig_compare(const void *arg1, const void *arg2)
+int sig_compare(const void *arg1, const void *arg2)
 {
 	unsigned long v1, v2;
 
