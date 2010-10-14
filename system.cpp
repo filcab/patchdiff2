@@ -262,7 +262,7 @@ slist_t * system_parse_idb(ea_t ea, char * file, options_t * opt)
 		ipc_execute_second_instance(tmpname, ea, file);
 
 	sl = siglist_load(tmpname);
-	_unlink(tmpname);
+	os_unlink(tmpname);
 
 	return sl;
 }

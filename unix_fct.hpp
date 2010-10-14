@@ -17,8 +17,8 @@
 */
 
 
-#ifndef __WIN_FCT_H__
-#define __WIN_FCT_H__
+#ifndef __UNIX_FCT_H__
+#define __UNIX_FCT_H__
 
 #include "system.hpp"
 

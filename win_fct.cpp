@@ -129,6 +129,17 @@ long os_get_pid()
 
 
 /*------------------------------------------------*/
+/* function : os_unlink                           */
+/* description: removes a link to a file          */
+/*------------------------------------------------*/
+
+int os_unlink(const char * path)
+{
+	return _unlink(path);
+}
+
+
+/*------------------------------------------------*/
 /* function : os_ipc_send                         */
 /* description: Sends data on pipe                */
 /*------------------------------------------------*/
