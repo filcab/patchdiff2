@@ -39,8 +39,8 @@ struct pbasic_block_t : public area_t
 class pflow_chart_t
 {
 private:
-	bool pflow_chart_t::check_address(ea_t ea);
-	bool pflow_chart_t::getJump(func_t * fct, qvector<ea_t> & list, pbasic_block_t & bl);
+	bool check_address(ea_t ea);
+	bool getJump(func_t * fct, qvector<ea_t> & list, pbasic_block_t & bl);
 
 public:
 	typedef qvector<pbasic_block_t> blocks_t;
