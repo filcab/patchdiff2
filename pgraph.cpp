@@ -17,8 +17,6 @@
 */
 
 
-#include <windows.h>
-
 #include <ida.hpp>
 #include <idp.hpp>
 #include <graph.hpp>
