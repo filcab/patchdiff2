@@ -81,7 +81,7 @@ int os_execute_command(char * cmd, bool close, void * data)
   if (close)
     {
       /* we wait until the process finished (IE: sig file is generated) */
-      if (waitpid(id->pid, &status, 0) == -1)
+      if (waitpid(pid, &status, 0) == -1)
 	return -1;
     }
   else

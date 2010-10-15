@@ -23,9 +23,9 @@
 #include "system.hpp"
 
 #ifdef __EA64__
-#define IDA_EXEC "idag64.exe"
+#define IDA_EXEC "idaq64.exe"
 #else
-#define IDA_EXEC "idag.exe"
+#define IDA_EXEC "idaq.exe"
 #endif
 
 
