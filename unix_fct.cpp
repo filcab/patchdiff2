@@ -46,13 +46,15 @@ pid_t create_process(char * cmd)
 {
   pid_t pid;
   char * argv[4];
+  char name[512];
 
   pid = fork();
   if (pid == 0)
     {
+      qsnprintf(name, sizeof(name), "\"%s\"", cmd);
       argv[0] = "sh";
       argv[1] = "-c";
-      argv[3] = cmd;
+      argv[3] = name;
       argv[4] = NULL;
 
       execvp(argv[0], argv);
@@ -224,19 +226,19 @@ bool os_ipc_init(void ** data, long pid, int type)
   if (type == IPC_SERVER)
     {
       mkfifo(sname, 0666);
-      id->spipe = open(sname, O_WRONLY);
+      id->spipe = open(sname, O_RDWR|O_NONBLOCK);
       if (id->spipe == -1) goto error;
 
       mkfifo(rname, 0666);
-      id->rpipe = open(rname, O_RDONLY);
+      id->rpipe = open(rname, O_RDWR|O_NONBLOCK);
       if (id->rpipe == -1) goto error;
     }
   else
     {
-      id->spipe = open(rname, O_WRONLY);
+      id->spipe = open(rname, O_RDWR|O_NONBLOCK);
       if (id->spipe == -1) goto error;
 
-      id->rpipe = open(sname, O_RDONLY);
+      id->rpipe = open(sname, O_RDWR|O_NONBLOCK);
       if (id->rpipe == -1) goto error;
     }
 

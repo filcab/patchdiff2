@@ -14,6 +14,9 @@ O12=system
 O13=display
 O14=unix_fct
 
+__CFLAGS=-m32
+__LFLAGS=-m32
+__PIC__ = 1
 __LINUX__ = 1
 
 include ../plugin.unx

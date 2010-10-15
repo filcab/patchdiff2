@@ -43,8 +43,17 @@ ipc_config_t ipcc;
 int generate_idc_file(char * file)
 {
 	FILE * fp;
+	char name[QMAXPATH];
+	char * str;
 
-	fp = qfopen(file, "w+");
+	qsnprintf(name, sizeof(name), "%s", file);
+
+#ifndef __WINDOWS
+	if (( str = getenv("TMPDIR")) == NULL) str = "/tmp";
+	if (strncmp(file, "./", 2) == 0)
+	  qsnprintf(name, sizeof(name), "%s/%s", str, file);
+#endif
+	fp = qfopen(name, "w+");
 	if (!fp) return -1;
 
 	qfwrite(fp, PATCHDIFF_IDC, strlen(PATCHDIFF_IDC));
@@ -105,6 +114,7 @@ bool ipc_init(char * file, int type, long id)
 	{
 		if (type == 1)
 		{
+
 			pid = os_get_pid();
 			ret = os_ipc_init(&ipcc.data, pid, IPC_SERVER);
 			if (!ret)
