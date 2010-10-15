@@ -100,7 +100,7 @@ int os_execute_command(char * cmd, bool close, void * data)
 
 bool os_check_process(pid_t pid)
 {
-  if (kill(pid, 0))
+  if (kill(pid, 0) == 0)
     return true;
   
   return false;
@@ -168,12 +168,6 @@ bool os_ipc_recv(void * data, int type, idata_t * d)
   struct timeval tv;
   int ret;
   
-  FD_ZERO(&rfds);
-  FD_SET(id->rpipe, &rfds);
-
-  FD_ZERO(&efds);
-  FD_SET(id->rpipe, &efds);
-
   tv.tv_sec = 0;
   tv.tv_usec = 1000;
 
@@ -181,6 +175,12 @@ bool os_ipc_recv(void * data, int type, idata_t * d)
     {
       while (1)
 	{
+	  FD_ZERO(&rfds);
+	  FD_SET(id->rpipe, &rfds);
+
+	  FD_ZERO(&efds);
+	  FD_SET(id->rpipe, &efds);
+
 	  ret = select(1, &rfds, NULL, &efds, &tv);
 	  
 	  if (ret > 0 && FD_ISSET(id->rpipe, &rfds))
@@ -192,7 +192,13 @@ bool os_ipc_recv(void * data, int type, idata_t * d)
     }
   else
     {
-      ret = select(1, &rfds, NULL, &efds, &tv);
+      FD_ZERO(&rfds);
+      FD_SET(id->rpipe, &rfds);
+
+      FD_ZERO(&efds);
+      FD_SET(id->rpipe, &efds);
+
+      ret = select(1, &rfds, NULL, &efds, NULL);
       if (!(ret > 0 && FD_ISSET(id->rpipe, &rfds)))
 	return false;
     }
