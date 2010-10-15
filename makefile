@@ -11,7 +11,7 @@ O9=pchart
 O10=pgraph
 O11=sig
 O12=system
-#O13=display
+O13=display
 O14=unix_fct
 
 __LINUX__ = 1
