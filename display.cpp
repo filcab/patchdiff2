@@ -30,7 +30,7 @@
 #include "system.hpp"
 
 
-static ulong idaapi sizer_dlist(slist_t * sl)
+static uint32 idaapi sizer_dlist(slist_t * sl)
 {
 	if (sl)
 		return sl->num;
@@ -38,7 +38,7 @@ static ulong idaapi sizer_dlist(slist_t * sl)
 	return 0;
 }
 
-static ulong idaapi sizer_match(void *obj)
+static uint32 idaapi sizer_match(void *obj)
 {
 	deng_t * d = (deng_t *)obj;
 
@@ -46,7 +46,7 @@ static ulong idaapi sizer_match(void *obj)
 }
 
 
-static ulong idaapi sizer_identical(void *obj)
+static uint32 idaapi sizer_identical(void *obj)
 {
 	deng_t * d = (deng_t *)obj;
 
@@ -54,7 +54,7 @@ static ulong idaapi sizer_identical(void *obj)
 }
 
 
-static ulong idaapi sizer_unmatch(void *obj)
+static uint32 idaapi sizer_unmatch(void *obj)
 {
 	if (obj)
 		return ((deng_t *)obj)->ulist->num;
@@ -74,7 +74,7 @@ static void idaapi close(void *obj)
 }
 
 
-static void idaapi desc_dlist(slist_t * sl,ulong n,char * const *arrptr)
+static void idaapi desc_dlist(slist_t * sl,uint32 n,char * const *arrptr)
 {
 	int i;
 
@@ -103,7 +103,7 @@ static void idaapi desc_dlist(slist_t * sl,ulong n,char * const *arrptr)
 /* description: Fills matched list                */
 /*------------------------------------------------*/
 
-static void idaapi desc_match(void *obj,ulong n,char * const *arrptr)
+static void idaapi desc_match(void *obj,uint32 n,char * const *arrptr)
 {
 	deng_t * d = (deng_t *)obj;
 
@@ -116,7 +116,7 @@ static void idaapi desc_match(void *obj,ulong n,char * const *arrptr)
 /* description: Fills identical list              */
 /*------------------------------------------------*/
 
-static void idaapi desc_identical(void *obj,ulong n,char * const *arrptr)
+static void idaapi desc_identical(void *obj,uint32 n,char * const *arrptr)
 {
 	deng_t * d = (deng_t *)obj;
 
@@ -129,7 +129,7 @@ static void idaapi desc_identical(void *obj,ulong n,char * const *arrptr)
 /* description: Fills unmatched list              */
 /*------------------------------------------------*/
 
-static void idaapi desc_unmatch(void *obj,ulong n,char * const *arrptr)
+static void idaapi desc_unmatch(void *obj,uint32 n,char * const *arrptr)
 {
 	int i;
 	slist_t * sl;
@@ -154,7 +154,7 @@ static void idaapi desc_unmatch(void *obj,ulong n,char * const *arrptr)
 }
 
 
-static void idaapi enter_list(slist_t * sl,ulong n)
+static void idaapi enter_list(slist_t * sl,uint32 n)
 {
 	jumpto(sl->sigs[n-1]->startEA);
 	os_copy_to_clipboard(NULL);
@@ -167,7 +167,7 @@ static void idaapi enter_list(slist_t * sl,ulong n)
 /*              matched list                      */
 /*------------------------------------------------*/
 
-static void idaapi enter_match(void *obj,ulong n)
+static void idaapi enter_match(void *obj,uint32 n)
 {
 	enter_list(((deng_t *)obj)->mlist, n);
 }
@@ -179,7 +179,7 @@ static void idaapi enter_match(void *obj,ulong n)
 /*              identical list                    */
 /*------------------------------------------------*/
 
-static void idaapi enter_identical(void *obj,ulong n)
+static void idaapi enter_identical(void *obj,uint32 n)
 {
 	enter_list(((deng_t *)obj)->ilist, n);
 }
@@ -191,7 +191,7 @@ static void idaapi enter_identical(void *obj,ulong n)
 /*              unmatched list                    */
 /*------------------------------------------------*/
 
-static void idaapi enter_unmatch(void *obj,ulong n)
+static void idaapi enter_unmatch(void *obj,uint32 n)
 {
 	slist_t * sl = ((deng_t *)obj)->ulist;
 
@@ -202,7 +202,7 @@ static void idaapi enter_unmatch(void *obj,ulong n)
 }
 
 
-static ulong idaapi graph_list(slist_t * sl,ulong n, options_t * opt)
+static ulong idaapi graph_list(slist_t * sl,uint32 n, options_t * opt)
 {
 	slist_t * sl1 = NULL;
 	slist_t * sl2 = NULL;
@@ -243,7 +243,7 @@ static ulong idaapi graph_list(slist_t * sl,ulong n, options_t * opt)
 /*              matched list                      */
 /*------------------------------------------------*/
 
-static void idaapi graph_match(void *obj,ulong n)
+static void idaapi graph_match(void *obj,uint32 n)
 {
 	slist_t * sl = ((deng_t *)obj)->mlist;
 	options_t * opt = ((deng_t *)obj)->opt;
@@ -260,7 +260,7 @@ static void idaapi graph_match(void *obj,ulong n)
 /*              identical list                    */
 /*------------------------------------------------*/
 
-static void idaapi graph_identical(void *obj,ulong n)
+static void idaapi graph_identical(void *obj,uint32 n)
 {
 	slist_t * sl = ((deng_t *)obj)->ilist;
 	options_t * opt = ((deng_t *)obj)->opt;
@@ -277,7 +277,7 @@ static void idaapi graph_identical(void *obj,ulong n)
 /*              unmatched list                    */
 /*------------------------------------------------*/
 
-static void idaapi graph_unmatch(void *obj,ulong n)
+static void idaapi graph_unmatch(void *obj,uint32 n)
 {
 	slist_t * sl = NULL, * tmp = ((deng_t *)obj)->ulist;
 
@@ -313,7 +313,7 @@ static void idaapi graph_unmatch(void *obj,ulong n)
 }
 
 
-static ulong idaapi res_unmatch(deng_t * d,ulong n, int type)
+static uint32 idaapi res_unmatch(deng_t * d,uint32 n, int type)
 {
 	slist_t * sl;
 
@@ -345,7 +345,7 @@ static ulong idaapi res_unmatch(deng_t * d,ulong n, int type)
 /*              list                              */
 /*------------------------------------------------*/
 
-static ulong idaapi res_iunmatch(void *obj,ulong n)
+static uint32 idaapi res_iunmatch(void *obj,uint32 n)
 {
 	return res_unmatch((deng_t *)obj, n, 0);
 }
@@ -357,7 +357,7 @@ static ulong idaapi res_iunmatch(void *obj,ulong n)
 /*              list                              */
 /*------------------------------------------------*/
 
-static ulong idaapi res_munmatch(void *obj,ulong n)
+static uint32 idaapi res_munmatch(void *obj,uint32 n)
 {
 	return res_unmatch((deng_t *)obj, n, 1);
 }
@@ -429,7 +429,7 @@ void propagate_match(deng_t * eng, psig_t * s1, psig_t * s2, int options)
 /*              list                              */
 /*------------------------------------------------*/
 
-static ulong idaapi res_match(void *obj,ulong n)
+static uint32 idaapi res_match(void *obj,uint32 n)
 {
 	deng_t * eng = (deng_t *)obj;
 	psig_t * s1, * s2;
@@ -482,7 +482,7 @@ static ulong idaapi res_match(void *obj,ulong n)
 /*              to identical list                 */
 /*------------------------------------------------*/
 
-static ulong idaapi res_mtoi(void *obj,ulong n)
+static uint32 idaapi res_mtoi(void *obj,uint32 n)
 {
 	deng_t * d = (deng_t *)obj;
 
@@ -503,7 +503,7 @@ static ulong idaapi res_mtoi(void *obj,ulong n)
 /*              to matched list                   */
 /*------------------------------------------------*/
 
-static ulong idaapi res_itom(void *obj,ulong n)
+static uint32 idaapi res_itom(void *obj,uint32 n)
 {
 	deng_t * d = (deng_t *)obj;
 
@@ -523,7 +523,7 @@ static ulong idaapi res_itom(void *obj,ulong n)
 /* description: Sets element as flagged/unflagged */
 /*------------------------------------------------*/
 
-static ulong idaapi res_flagged(void *obj,ulong n)
+static uint32 idaapi res_flagged(void *obj,uint32 n)
 {
 	deng_t * d = (deng_t *)obj;
 	d->mlist->sigs[n-1]->flag = !d->mlist->sigs[n-1]->flag;
