@@ -35,15 +35,6 @@
 #define IPC_CLIENT 2
 
 
-struct idata
-{
-	long cmd;
-	char data[256];
-};
-
-typedef struct idata idata_t;
-
-
 struct ipc_config
 {
 	long init;
@@ -51,6 +42,14 @@ struct ipc_config
 };
 
 typedef struct ipc_config ipc_config_t;
+
+struct idata
+{
+	long cmd;
+	char data[256];
+};
+
+typedef struct idata idata_t;
 
 
 bool system_get_pref(char *, void *, int);
