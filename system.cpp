@@ -33,6 +33,24 @@
 ipc_config_t ipcc;
 
 
+void system_temp_name(char * data, size_t size)
+{
+	char name[QMAXPATH];
+	char * str;
+
+	qtmpnam(name, sizeof(name));
+	qsnprintf(data, size, "%s", name);
+
+#ifndef __WINDOWS
+	if (( str = getenv("TMPDIR")) == NULL) str = "/tmp";
+	if (strncmp(name, "./", 2) == 0)
+	  qsnprintf(data, size, "%s/%s", str, name);
+#endif
+
+	data[strlen(data)-4] = '\0';
+}
+
+
 /*------------------------------------------------*/
 /* function : generate_idc_file                   */
 /* description: generates an idc file to launch   */
@@ -43,17 +61,8 @@ ipc_config_t ipcc;
 int generate_idc_file(char * file)
 {
 	FILE * fp;
-	char name[QMAXPATH];
-	char * str;
 
-	qsnprintf(name, sizeof(name), "%s", file);
-
-#ifndef __WINDOWS
-	if (( str = getenv("TMPDIR")) == NULL) str = "/tmp";
-	if (strncmp(file, "./", 2) == 0)
-	  qsnprintf(name, sizeof(name), "%s/%s", str, file);
-#endif
-	fp = qfopen(name, "w+");
+	fp = qfopen(file, "w+");
 	if (!fp) return -1;
 
 	qfwrite(fp, PATCHDIFF_IDC, strlen(PATCHDIFF_IDC));
@@ -120,8 +129,7 @@ bool ipc_init(char * file, int type, long id)
 			if (!ret)
 				return false;
 
-			qtmpnam(tmpname, sizeof(tmpname));
-			tmpname[strlen(tmpname)-4] = '\0';
+			system_temp_name(tmpname, sizeof(tmpname));
 			if (system_execute_second_instance(tmpname, BADADDR, file, false, pid, ipcc.data) != 0)
 			{
 				ipc_close();
@@ -263,8 +271,7 @@ slist_t * system_parse_idb(ea_t ea, char * file, options_t * opt)
 	slist_t * sl = NULL;
 	char tmpname[QMAXPATH];
 
-	qtmpnam(tmpname, sizeof(tmpname));
-	tmpname[strlen(tmpname)-4] = '\0';
+	system_temp_name(tmpname, sizeof(tmpname));
 
 	if (!options_use_ipc(opt))
 		system_execute_second_instance(tmpname, ea, file, true, 0, NULL);
