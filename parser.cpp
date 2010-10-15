@@ -38,7 +38,7 @@
 slist_t * parse_idb()
 {
 	slist_t * sl;
-	sig_t * sig;
+	psig_t * sig;
 	size_t fct_num, i;
 	qvector<ea_t> class_l;
 
@@ -88,7 +88,7 @@ slist_t * parse_idb()
 slist_t * parse_fct(ea_t ea, char options)
 {
 	slist_t * sl;
-	sig_t * sig;
+	psig_t * sig;
 	func_t * fct;
 	int i, k;
 	pflow_chart_t * fchart;

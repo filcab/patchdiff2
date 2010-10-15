@@ -31,7 +31,7 @@
 clist_t * clist_init(slist_t * l)
 {
 	clist_t * cl;
-	dsig_t * ds, * prev;
+	dpsig_t * ds, * prev;
 	size_t i;
 
 	cl = (clist_t *)qalloc(sizeof(*cl));
@@ -46,7 +46,7 @@ clist_t * clist_init(slist_t * l)
 
 	for(i=0; i<l->num; i++)
 	{
-		ds = (dsig_t *)qalloc(sizeof(*ds));
+		ds = (dpsig_t *)qalloc(sizeof(*ds));
 		ds->prev = prev;
 		ds->next = NULL;
 		ds->removed = false;
@@ -71,12 +71,12 @@ clist_t * clist_init(slist_t * l)
 /* description: Inserts sig in sorted list        */
 /*------------------------------------------------*/
 
-int clist_insert(clist_t * cl, sig_t * s)
+int clist_insert(clist_t * cl, psig_t * s)
 {
-	dsig_t * ds, * prev, * cur;
+	dpsig_t * ds, * prev, * cur;
 	int ret;
 
-	ds = (dsig_t *)qalloc(sizeof(*ds));
+	ds = (dpsig_t *)qalloc(sizeof(*ds));
 	if (!ds) return -1;
 
 	ds->sig = s;
@@ -120,9 +120,9 @@ int clist_insert(clist_t * cl, sig_t * s)
 /* description: Inserts dsig in matched list      */
 /*------------------------------------------------*/
 
-int clist_insert_dsig(clist_t * cl, dsig_t * ds)
+int clist_insert_dsig(clist_t * cl, dpsig_t * ds)
 {
-	dsig_t * prev, * cur;
+	dpsig_t * prev, * cur;
 	int ret;
 
 	ds->prev = NULL;
@@ -168,11 +168,11 @@ int clist_insert_dsig(clist_t * cl, dsig_t * ds)
 /*              signatures with a list of xrefs   */
 /*------------------------------------------------*/
 
-clist_t * clist_init_from_refs(hsig_t * hsig, frefs_t * refs)
+clist_t * clist_init_from_refs(hpsig_t * hsig, frefs_t * refs)
 {
 	clist_t * cl;
 	fref_t * fl;
-	sig_t * sig;
+	psig_t * sig;
 
 	cl = (clist_t *)qalloc(sizeof(*cl));
 	if (!cl) return NULL;
@@ -207,7 +207,7 @@ clist_t * clist_init_from_refs(hsig_t * hsig, frefs_t * refs)
 /* description: Removes element from list         */
 /*------------------------------------------------*/
 
-void clist_remove(clist_t * cl, dsig_t * ds)
+void clist_remove(clist_t * cl, dpsig_t * ds)
 {
 	if (ds->removed == true)
 		return;

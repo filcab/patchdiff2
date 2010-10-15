@@ -53,6 +53,6 @@ typedef struct dengine deng_t;
 
 int generate_diff(deng_t **, slist_t *, slist_t *, char *, bool, options_t *);
 void diff_engine_free(deng_t *);
-bool sig_equal(sig_t *, sig_t *, int);
+bool sig_equal(psig_t *, psig_t *, int);
 
 #endif

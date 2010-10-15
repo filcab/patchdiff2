@@ -28,16 +28,16 @@
 /* description: Initializes hash table to NULL    */
 /*------------------------------------------------*/
 
-hsig_t * hash_init(unsigned int num)
+hpsig_t * hash_init(unsigned int num)
 {
 	unsigned int i;
-	hsig_t * hsig;
+	hpsig_t * hsig;
 	static unsigned int primes[] = { 67, 251, 509, 1021, 2039, 4093, 8191, 16381, 32749, 65521, 131071, 262139, 524287, 1048573, 2097143 };
 
 	for (i=0; i < ((sizeof(primes) / sizeof(unsigned int)) - 1); i++)
 		if (primes[i] > (num/3)) break;
 
-	hsig = (hsig_t *)qalloc(sizeof(*hsig));
+	hsig = (hpsig_t *)qalloc(sizeof(*hsig));
 	if (!hsig) return NULL;
 
 	hsig->max_hash = primes[i];
@@ -60,7 +60,7 @@ hsig_t * hash_init(unsigned int num)
 /* description: Creates hash value                */
 /*------------------------------------------------*/
 
-unsigned int hash_mk_ea(hsig_t * htable, ea_t val)
+unsigned int hash_mk_ea(hpsig_t * htable, ea_t val)
 {
 	char * ptr;
 	unsigned int h = 0;
@@ -88,7 +88,7 @@ unsigned int hash_mk_ea(hsig_t * htable, ea_t val)
 /* description: Adds element to the hash table    */
 /*------------------------------------------------*/
 
-int hash_add_ea (hsig_t * htable, sig_t * sig)
+int hash_add_ea (hpsig_t * htable, psig_t * sig)
 {
 	int id = hash_mk_ea(htable, sig->startEA);
 	hsignature_t * hsig = NULL; 
@@ -109,7 +109,7 @@ int hash_add_ea (hsig_t * htable, sig_t * sig)
 /* description: Finds element in the hash table   */
 /*------------------------------------------------*/
 
-sig_t * hash_find_ea (hsig_t * htable, ea_t ea)
+psig_t * hash_find_ea (hpsig_t * htable, ea_t ea)
 {
 	if (ea == BADADDR)
 		return NULL;
@@ -136,7 +136,7 @@ sig_t * hash_find_ea (hsig_t * htable, ea_t ea)
 /* description: Frees hash table                  */
 /*------------------------------------------------*/
 
-void hash_free (hsig_t * htable)
+void hash_free (hpsig_t * htable)
 {
 	unsigned int i;
 	hsignature_t * hsig, * tmp;

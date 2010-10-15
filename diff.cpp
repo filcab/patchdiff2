@@ -35,11 +35,11 @@
 /*				creates successor xrefs           */
 /*------------------------------------------------*/
 
-hsig_t * diff_init_hash(slist_t * sl)
+hpsig_t * diff_init_hash(slist_t * sl)
 {
 	fref_t * fref;
-	sig_t * sig;
-	hsig_t * h;
+	psig_t * sig;
+	hpsig_t * h;
 	size_t i;
 
 	h = hash_init(sl->num);
@@ -100,7 +100,7 @@ hsig_t * diff_init_hash(slist_t * sl)
 
 int slist_init_crefs(slist_t * l)
 {
-	hsig_t * h = NULL;
+	hpsig_t * h = NULL;
 	clist_t * cl1, * cl2;
 	size_t i;
 
@@ -167,7 +167,7 @@ void diff_engine_free(deng_t * eng)
 /* description: Checks if 2 sigs are equal        */
 /*------------------------------------------------*/
 
-bool sig_equal(sig_t * s1, sig_t * s2, int type)
+bool sig_equal(psig_t * s1, psig_t * s2, int type)
 {
 	if (s1->sig != s2->sig || s1->hash != s2->hash)
 		return false;
@@ -193,7 +193,7 @@ bool sig_equal(sig_t * s1, sig_t * s2, int type)
 /* description: Checks if 2 sig names are equal   */
 /*------------------------------------------------*/
 
-bool sig_name_equal(sig_t * s1, sig_t * s2)
+bool sig_name_equal(psig_t * s1, psig_t * s2)
 {
 	if (!strncmp(s1->name, "sub_", 4) || strcmp(s1->name, s2->name))
 		return false;
@@ -209,7 +209,7 @@ bool sig_name_equal(sig_t * s1, sig_t * s2)
 
 bool clist_equal_match(clist_t * cl1, clist_t * cl2)
 {
-	dsig_t * s1, * s2;
+	dpsig_t * s1, * s2;
 	size_t i;
 
 	if (!cl1 || !cl2 || cl1->nmatch == 0 || cl2->nmatch == 0)
@@ -242,7 +242,7 @@ bool clist_equal_match(clist_t * cl1, clist_t * cl2)
 
 bool clist_almost_equal_match(clist_t * cl1, clist_t * cl2)
 {
-	dsig_t * s1, * s2;
+	dpsig_t * s1, * s2;
 	size_t i, k;
 
 	if (!cl1 || !cl2 || cl1->nmatch == 0 || cl2->nmatch == 0)
@@ -280,9 +280,9 @@ bool clist_almost_equal_match(clist_t * cl1, clist_t * cl2)
 /* note: changes ds if ds already matched         */
 /*------------------------------------------------*/
 
-dsig_t * clist_get_unique_sig(clist_t * cl, dsig_t ** ds, int type)
+dpsig_t * clist_get_unique_sig(clist_t * cl, dpsig_t ** ds, int type)
 {
-	dsig_t * ptr, * tmp;
+	dpsig_t * ptr, * tmp;
 
 	if (!*ds) return NULL;
 	ptr = *ds;
@@ -371,9 +371,9 @@ dsig_t * clist_get_unique_sig(clist_t * cl, dsig_t ** ds, int type)
 /*       next signature in the list               */
 /*------------------------------------------------*/
 
-dsig_t * clist_get_best_sig(clist_t * cl, int type)
+dpsig_t * clist_get_best_sig(clist_t * cl, int type)
 {
-	dsig_t * best, * ptr;
+	dpsig_t * best, * ptr;
 
 	best = cl->pos;
 
@@ -399,9 +399,9 @@ dsig_t * clist_get_best_sig(clist_t * cl, int type)
 /*              in list and unique                */
 /*------------------------------------------------*/
 
-dsig_t * clist_get_eq_sig(clist_t * cl, dsig_t * dsig, int type)
+dpsig_t * clist_get_eq_sig(clist_t * cl, dpsig_t * dsig, int type)
 {
-	dsig_t * ds, * ptr;
+	dpsig_t * ds, * ptr;
 	bool b2, b1 = sig_is_class(dsig->sig);
 
 	ds = cl->sigs;
@@ -481,10 +481,10 @@ dsig_t * clist_get_eq_sig(clist_t * cl, dsig_t * dsig, int type)
 }
 
 
-void clist_update_crefs(clist_t * cl, dsig_t * ds, int type)
+void clist_update_crefs(clist_t * cl, dpsig_t * ds, int type)
 {
-	dsig_t * tmp, * next;
-	dsig_t * tmp2, * next2;
+	dpsig_t * tmp, * next;
+	dpsig_t * tmp2, * next2;
 	clist_t * tcl;
 
 	tmp = cl->sigs;
@@ -513,7 +513,7 @@ void clist_update_crefs(clist_t * cl, dsig_t * ds, int type)
 }
 
 
-void clist_update_and_remove(clist_t * cl, dsig_t * ds)
+void clist_update_and_remove(clist_t * cl, dpsig_t * ds)
 {
 	if (ds->removed)
 		return;
@@ -532,7 +532,7 @@ void clist_update_and_remove(clist_t * cl, dsig_t * ds)
 
 int diff_run(deng_t * eng, clist_t * cl1, clist_t * cl2, int min_type, int max_type, bool pclass)
 {
-	dsig_t * dsig, * dsig2;
+	dpsig_t * dsig, * dsig2;
 	int changed = 0;
 	int type = min_type;
 	int mtype = max_type;

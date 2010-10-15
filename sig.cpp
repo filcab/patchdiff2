@@ -81,11 +81,11 @@ char * pget_func_name(ea_t ea, char * buffer, size_t blen)
 /*              function signature                */
 /*------------------------------------------------*/
 
-sig_t * sig_init()
+psig_t * sig_init()
 {
-	sig_t * sig;
+	psig_t * sig;
 
-	sig = (sig_t *)qalloc(sizeof(*sig));
+	sig = (psig_t *)qalloc(sizeof(*sig));
 	if (!sig)
 		return NULL;
 
@@ -124,9 +124,9 @@ void frefs_free(frefs_t * frefs)
 /* description: Frees chained list                */
 /*------------------------------------------------*/
 
-void dsig_free(dsig_t * ds)
+void dsig_free(dpsig_t * ds)
 {
-	dsig_t * next;
+	dpsig_t * next;
 
 	while (ds)
 	{
@@ -158,7 +158,7 @@ void clist_free(clist_t * cl)
 /* description: Frees signature                   */
 /*------------------------------------------------*/
 
-void sig_free(sig_t * sig)
+void sig_free(psig_t * sig)
 {
 	if (sig->name)
 	{
@@ -184,7 +184,7 @@ void sig_free(sig_t * sig)
 /* description: Sets function signature name      */
 /*------------------------------------------------*/
 
-void sig_set_name(sig_t * sig, const char * name)
+void sig_set_name(psig_t * sig, const char * name)
 {
 	sig->name = qstrdup(name);
 }
@@ -195,7 +195,7 @@ void sig_set_name(sig_t * sig, const char * name)
 /* description: Sets function start address       */
 /*------------------------------------------------*/
 
-void sig_set_start(sig_t * sig, ea_t ea)
+void sig_set_start(psig_t * sig, ea_t ea)
 {
 	sig->startEA = ea;
 }
@@ -206,7 +206,7 @@ void sig_set_start(sig_t * sig, ea_t ea)
 /* description: Returns function start address    */
 /*------------------------------------------------*/
 
-ea_t sig_get_start(sig_t * sig)
+ea_t sig_get_start(psig_t * sig)
 {
 	return sig->startEA;
 }
@@ -217,7 +217,7 @@ ea_t sig_get_start(sig_t * sig)
 /* description: Returns signature pred xrefs      */
 /*------------------------------------------------*/
 
-frefs_t * sig_get_preds(sig_t * sig)
+frefs_t * sig_get_preds(psig_t * sig)
 {
 	return sig->prefs;
 }
@@ -228,7 +228,7 @@ frefs_t * sig_get_preds(sig_t * sig)
 /* description: Returns signature succ xrefs      */
 /*------------------------------------------------*/
 
-frefs_t * sig_get_succs(sig_t * sig)
+frefs_t * sig_get_succs(psig_t * sig)
 {
 	return sig->srefs;
 }
@@ -239,7 +239,7 @@ frefs_t * sig_get_succs(sig_t * sig)
 /* description: Returns signature cxrefs          */
 /*------------------------------------------------*/
 
-clist_t * sig_get_crefs(sig_t * sig, int type)
+clist_t * sig_get_crefs(psig_t * sig, int type)
 {
 	if (type == SIG_PRED)
 		return sig->cp;
@@ -256,7 +256,7 @@ clist_t * sig_get_crefs(sig_t * sig, int type)
 /* description: Sets signature cxrefs             */
 /*------------------------------------------------*/
 
-void sig_set_crefs(sig_t * sig, int type, clist_t * cl)
+void sig_set_crefs(psig_t * sig, int type, clist_t * cl)
 {
 	if (type == SIG_PRED)
 		sig->cp = cl;
@@ -271,7 +271,7 @@ void sig_set_crefs(sig_t * sig, int type, clist_t * cl)
 /* description: Sets file number                  */
 /*------------------------------------------------*/
 
-void sig_set_nfile(sig_t * sig, int num)
+void sig_set_nfile(psig_t * sig, int num)
 {
 	sig->nfile = num;
 }
@@ -282,7 +282,7 @@ void sig_set_nfile(sig_t * sig, int num)
 /* description: Sets matched address              */
 /*------------------------------------------------*/
 
-void sig_set_matched_sig(sig_t * sig, sig_t * sig2, int type)
+void sig_set_matched_sig(psig_t * sig, psig_t * sig2, int type)
 {
 	sig->msig = sig2;
 	sig->matchedEA = sig2->startEA;
@@ -302,7 +302,7 @@ void sig_set_matched_sig(sig_t * sig, sig_t * sig2, int type)
 /* description: Returns matched address           */
 /*------------------------------------------------*/
 
-sig_t * sig_get_matched_sig(sig_t * sig)
+psig_t * sig_get_matched_sig(psig_t * sig)
 {
 	return sig->msig;
 }
@@ -313,7 +313,7 @@ sig_t * sig_get_matched_sig(sig_t * sig)
 /* description: Returns matched type              */
 /*------------------------------------------------*/
 
-int sig_get_matched_type(sig_t * sig)
+int sig_get_matched_type(psig_t * sig)
 {
 	return sig->mtype;
 }
@@ -370,7 +370,7 @@ int sig_add_fref(frefs_t ** frefs, ea_t ea, int type, char rtype)
 /*              signature                         */
 /*------------------------------------------------*/
 
-int sig_add_pref(sig_t * sig, ea_t ea, int type, char rtype)
+int sig_add_pref(psig_t * sig, ea_t ea, int type, char rtype)
 {
 	return sig_add_fref(&sig->prefs, ea, type, rtype);
 }
@@ -382,7 +382,7 @@ int sig_add_pref(sig_t * sig, ea_t ea, int type, char rtype)
 /*              signature                         */
 /*------------------------------------------------*/
 
-int sig_add_sref(sig_t * sig, ea_t ea, int type, char rtype)
+int sig_add_sref(psig_t * sig, ea_t ea, int type, char rtype)
 {
 	return sig_add_fref(&sig->srefs, ea, type, rtype);
 }
@@ -434,7 +434,7 @@ bool ignore_jump(ea_t ea)
 /*              ea is a jump                      */
 /*------------------------------------------------*/
 
-bool is_jump(sig_t * sig, ea_t ea, bool * call, bool * cj)
+bool is_jump(psig_t * sig, ea_t ea, bool * call, bool * cj)
 {
 	xrefblk_t xb;
 	cref_t cr;
@@ -592,7 +592,7 @@ int dline_add(dline_t * dl, ea_t ea, char options)
 /* description: Adds an address to the signature  */
 /*------------------------------------------------*/
 
-int sig_add_address(sig_t * sig, short opcodes[256], ea_t ea, bool b, bool line, char options)
+int sig_add_address(psig_t * sig, short opcodes[256], ea_t ea, bool b, bool line, char options)
 {
 	unsigned char byte;
 	unsigned char buf[200];
@@ -667,7 +667,7 @@ int sig_add_address(sig_t * sig, short opcodes[256], ea_t ea, bool b, bool line,
 /* description: Adds a block to the signature     */
 /*------------------------------------------------*/
 
-int sig_add_block(sig_t * sig, short opcodes[256], ea_t startEA, ea_t endEA, bool line, char options)
+int sig_add_block(psig_t * sig, short opcodes[256], ea_t startEA, ea_t endEA, bool line, char options)
 {
 	ea_t ea;
 	flags_t flags;
@@ -702,7 +702,7 @@ int OS_CDECL compare(const void *arg1, const void *arg2)
 /*              signature opcodes                 */
 /*------------------------------------------------*/
 
-int sig_calc_sighash(sig_t * sig, short _opcodes[256], int do_sig)
+int sig_calc_sighash(psig_t * sig, short _opcodes[256], int do_sig)
 {
 	short tmp;
 	short opcodes[256];
@@ -741,7 +741,7 @@ int sig_calc_sighash(sig_t * sig, short _opcodes[256], int do_sig)
 /*              on success                        */
 /*------------------------------------------------*/
 
-ea_t sig_parse_dref_list(sig_t * sig, ea_t ea)
+ea_t sig_parse_dref_list(psig_t * sig, ea_t ea)
 {
 	ea_t fref;
 	flags_t f;
@@ -780,7 +780,7 @@ ea_t sig_parse_dref_list(sig_t * sig, ea_t ea)
 /*              a class                           */
 /*------------------------------------------------*/
 
-bool sig_is_class(sig_t * sig)
+bool sig_is_class(psig_t * sig)
 {
 	if (sig->sig == CLASS_SIG && sig->hash == CLASS_SIG && sig->crc_hash == CLASS_SIG)
 		return true;
@@ -795,10 +795,10 @@ bool sig_is_class(sig_t * sig)
 /*              class structure                   */
 /*------------------------------------------------*/
 
-sig_t * sig_class_generate(ea_t ea)
+psig_t * sig_class_generate(ea_t ea)
 {
 	func_t * xfct;
-	sig_t * sig;
+	psig_t * sig;
 	ea_t fref;
 	char buf[512];
 
@@ -836,11 +836,11 @@ sig_t * sig_class_generate(ea_t ea)
 /*              given function                    */
 /*------------------------------------------------*/
 
-sig_t * sig_generate(size_t fct_num, qvector<ea_t> & class_l)
+psig_t * sig_generate(size_t fct_num, qvector<ea_t> & class_l)
 {
 	func_t * fct, * xfct;
 	pflow_chart_t * fchart;
-	sig_t * sig;
+	psig_t * sig;
 	ea_t fref, ea;
 	int bnum, i;
 	char buf[512];
@@ -963,7 +963,7 @@ void sig_save_refs(FILE * fp, frefs_t * refs)
 /* description: Saves signature to disk	          */
 /*------------------------------------------------*/
 
-int sig_save(sig_t * sig, FILE * fp)
+int sig_save(psig_t * sig, FILE * fp)
 {
 	size_t len;
 
@@ -999,7 +999,7 @@ int sig_save(sig_t * sig, FILE * fp)
 /* description: Loads signature  refs from disk   */
 /*------------------------------------------------*/
 
-void sig_load_prefs(sig_t * sig, FILE * fp, int type)
+void sig_load_prefs(psig_t * sig, FILE * fp, int type)
 {
 	int num, i;
 	pedge_t * eatab;
@@ -1031,10 +1031,10 @@ void sig_load_prefs(sig_t * sig, FILE * fp, int type)
 /* description: Loads signature from disk         */
 /*------------------------------------------------*/
 
-sig_t * sig_load(FILE * fp)
+psig_t * sig_load(FILE * fp)
 {
 	size_t len;
-	sig_t * sig;
+	psig_t * sig;
 	char buf[512];
 
 	sig = sig_init();
@@ -1092,7 +1092,7 @@ slist_t * siglist_init(size_t num, char * file)
 	l->file = file;
 	l->num = 0;
 	l->org_num = num;
-	l->sigs = (sig_t **)qalloc(num * sizeof(*l->sigs));
+	l->sigs = (psig_t **)qalloc(num * sizeof(*l->sigs));
 
 	if (!l->sigs && l->org_num != 0)
 	{
@@ -1111,9 +1111,9 @@ slist_t * siglist_init(size_t num, char * file)
 
 bool siglist_realloc(slist_t * sl, size_t num)
 {
-	sig_t ** sigs;
+	psig_t ** sigs;
 
-	sigs = (sig_t **)qrealloc(sl->sigs, (sl->org_num + num) * sizeof(*sl->sigs));
+	sigs = (psig_t **)qrealloc(sl->sigs, (sl->org_num + num) * sizeof(*sl->sigs));
 	if (!sigs)
 		return false;
 
@@ -1133,26 +1133,26 @@ int OS_CDECL sig_compare(const void *arg1, const void *arg2)
 {
 	unsigned long v1, v2;
 
-	v1 = (*(sig_t **)arg1)->sig;
-	v2 = (*(sig_t **)arg2)->sig;
+	v1 = (*(psig_t **)arg1)->sig;
+	v2 = (*(psig_t **)arg2)->sig;
 
 	if (v2 > v1) return 1;
 	if (v2 < v1) return -1;
 
-	v1 = (*(sig_t **)arg1)->hash;
-	v2 = (*(sig_t **)arg2)->hash;
+	v1 = (*(psig_t **)arg1)->hash;
+	v2 = (*(psig_t **)arg2)->hash;
 
 	if (v2 > v1) return 1;
 	if (v2 < v1) return -1;
 
-	v1 = (*(sig_t **)arg1)->crc_hash;
-	v2 = (*(sig_t **)arg2)->crc_hash;
+	v1 = (*(psig_t **)arg1)->crc_hash;
+	v2 = (*(psig_t **)arg2)->crc_hash;
 
 	if (v2 > v1) return 1;
 	if (v2 < v1) return -1;
 
-	v1 = (*(sig_t **)arg1)->str_hash;
-	v2 = (*(sig_t **)arg2)->str_hash;
+	v1 = (*(psig_t **)arg1)->str_hash;
+	v2 = (*(psig_t **)arg2)->str_hash;
 
 	if (v2 > v1) return 1;
 	if (v2 < v1) return -1;
@@ -1177,7 +1177,7 @@ void siglist_sort(slist_t * sl)
 /* description: Adds a new signature to the list  */
 /*------------------------------------------------*/
 
-void siglist_add(slist_t * sl, sig_t * sig)
+void siglist_add(slist_t * sl, psig_t * sig)
 {
 	if (sl->num >= sl->org_num)
 	{
@@ -1280,7 +1280,7 @@ slist_t * siglist_load(const char * filename)
 {
 	FILE * fp;
 	slist_t * sl;
-	sig_t * sig;
+	psig_t * sig;
 	size_t num, i;
 
 	fp = qfopen(filename, "rb");

@@ -41,27 +41,27 @@
 #define OS_CDECL
 #endif
 
-typedef struct signature sig_t;
+typedef struct signature psig_t;
 typedef struct dc_sig *  pdc_sig;
 
 struct dc_sig
 {
-	sig_t * sig;
+	psig_t * sig;
 	bool removed;
 	pdc_sig prev;
 	pdc_sig next;
 };
 
-typedef struct dc_sig dsig_t;
+typedef struct dc_sig dpsig_t;
 
 struct c_list
 {
 	size_t num;
-	dsig_t * pos;   // position in sigs list
-	dsig_t * sigs;  // chained list
+	dpsig_t * pos;   // position in sigs list
+	dpsig_t * sigs;  // chained list
 
 	size_t nmatch;	// number of matched element
-	dsig_t * msigs;	// matched list
+	dpsig_t * msigs;	// matched list
 };
 
 typedef struct c_list clist_t;
@@ -136,7 +136,7 @@ struct sig_list
 	graph_viewer_t *gv;
 	bool unique;
 	psig_list msl;
-	sig_t ** sigs;
+	psig_t ** sigs;
 };
 
 typedef struct sig_list slist_t;
@@ -147,35 +147,35 @@ void siglist_partial_free(slist_t *);
 int siglist_save(slist_t *, const char *);
 slist_t * siglist_load(const char *);
 slist_t * siglist_init(size_t, char *);
-sig_t * sig_generate(size_t, qvector<ea_t> &);
-sig_t * sig_class_generate(ea_t);
+psig_t * sig_generate(size_t, qvector<ea_t> &);
+psig_t * sig_class_generate(ea_t);
 void clist_free(clist_t *);
 void siglist_free(slist_t **);
 bool siglist_realloc(slist_t *, size_t);
-void siglist_add(slist_t *, sig_t *);
+void siglist_add(slist_t *, psig_t *);
 void siglist_remove(slist_t *, size_t);
 void siglist_sort(slist_t *);
-ea_t sig_get_start(sig_t * );
-void sig_set_nfile(sig_t *, int);
-void sig_set_matched_sig(sig_t *, sig_t *, int);
-sig_t * sig_get_matched_sig(sig_t *);
-void sig_set_matched_ea(sig_t *, ea_t);
-ea_t sig_get_matched_ea(sig_t *);
-int sig_get_matched_type(sig_t *);
-frefs_t * sig_get_preds(sig_t *);
-frefs_t * sig_get_succs(sig_t *);
-int sig_add_pref(sig_t *, ea_t, int, char);
-int sig_add_sref(sig_t *, ea_t, int, char);
-clist_t * sig_get_crefs(sig_t *, int);
-void sig_set_crefs(sig_t *, int, clist_t *);
+ea_t sig_get_start(psig_t * );
+void sig_set_nfile(psig_t *, int);
+void sig_set_matched_sig(psig_t *, psig_t *, int);
+psig_t * sig_get_matched_sig(psig_t *);
+void sig_set_matched_ea(psig_t *, ea_t);
+ea_t sig_get_matched_ea(psig_t *);
+int sig_get_matched_type(psig_t *);
+frefs_t * sig_get_preds(psig_t *);
+frefs_t * sig_get_succs(psig_t *);
+int sig_add_pref(psig_t *, ea_t, int, char);
+int sig_add_sref(psig_t *, ea_t, int, char);
+clist_t * sig_get_crefs(psig_t *, int);
+void sig_set_crefs(psig_t *, int, clist_t *);
 int OS_CDECL sig_compare(const void *, const void *);
-sig_t * sig_init();
-int sig_add_block(sig_t *, short *, ea_t, ea_t, bool, char);
-void sig_set_start(sig_t *, ea_t);
-void sig_set_name(sig_t *, const char *);
-int sig_calc_sighash(sig_t *, short *, int);
-void sig_free(sig_t *);
-bool sig_is_class(sig_t *);
+psig_t * sig_init();
+int sig_add_block(psig_t *, short *, ea_t, ea_t, bool, char);
+void sig_set_start(psig_t *, ea_t);
+void sig_set_name(psig_t *, const char *);
+int sig_calc_sighash(psig_t *, short *, int);
+void sig_free(psig_t *);
+bool sig_is_class(psig_t *);
 char * pget_func_name(ea_t, char *, size_t);
 
 #endif

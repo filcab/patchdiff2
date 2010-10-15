@@ -27,7 +27,7 @@ typedef struct hsignature * phsignature;
 
 struct hsignature
 {
-	sig_t * sig;
+	psig_t * sig;
 	phsignature next;
 };
 
@@ -39,13 +39,13 @@ struct hsig
 	hsignature_t ** table ;
 };
 
-typedef struct hsig hsig_t;
+typedef struct hsig hpsig_t;
 
 
-hsig_t * hash_init(size_t);
-unsigned int hash_mk_ea(hsig_t *, ea_t);
-int hash_add_ea (hsig_t *, sig_t *);
-sig_t * hash_find_ea (hsig_t *, ea_t);
-void hash_free (hsig_t *);
+hpsig_t * hash_init(size_t);
+unsigned int hash_mk_ea(hpsig_t *, ea_t);
+int hash_add_ea (hpsig_t *, psig_t *);
+psig_t * hash_find_ea (hpsig_t *, ea_t);
+void hash_free (hpsig_t *);
 
 #endif

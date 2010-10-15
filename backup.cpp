@@ -160,7 +160,7 @@ void buffer_unserialize_string(char * buf, size_t blen, size_t * pos, char ** s)
 /* description: Serializes a signature            */
 /*------------------------------------------------*/
 
-size_t singleton_serialize(char * buf, size_t blen, sig_t * s, int nfile)
+size_t singleton_serialize(char * buf, size_t blen, psig_t * s, int nfile)
 {
 	size_t pos = 0;
 	fref_t * fref = NULL;
@@ -218,7 +218,7 @@ size_t singleton_serialize(char * buf, size_t blen, sig_t * s, int nfile)
 /* description: Serializes a signature            */
 /*------------------------------------------------*/
 
-size_t singleton_unserialize(char * buf, size_t blen, sig_t ** s, int version)
+size_t singleton_unserialize(char * buf, size_t blen, psig_t ** s, int version)
 {
 	char tmp[512];
 	size_t pos = 0;
@@ -286,7 +286,7 @@ size_t singleton_unserialize(char * buf, size_t blen, sig_t ** s, int version)
 /*              matched signature                 */
 /*------------------------------------------------*/
 
-size_t pair_serialize(char * buf, size_t blen, sig_t * s)
+size_t pair_serialize(char * buf, size_t blen, psig_t * s)
 {
 	size_t len;
 
@@ -303,7 +303,7 @@ size_t pair_serialize(char * buf, size_t blen, sig_t * s)
 /*              matched signature                 */
 /*------------------------------------------------*/
 
-size_t pair_unserialize(char * buf, size_t blen, sig_t ** s, int version)
+size_t pair_unserialize(char * buf, size_t blen, psig_t ** s, int version)
 {
 	size_t len;
 

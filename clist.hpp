@@ -24,9 +24,9 @@
 #include "hash.hpp"
 
 clist_t * clist_init(slist_t *);
-int clist_insert(clist_t *, sig_t *);
-clist_t * clist_init_from_refs(hsig_t *, frefs_t *);
-void clist_remove(clist_t *, dsig_t *);
+int clist_insert(clist_t *, psig_t *);
+clist_t * clist_init_from_refs(hpsig_t *, frefs_t *);
+void clist_remove(clist_t *, dpsig_t *);
 void clist_reset(clist_t *);
 
 #endif

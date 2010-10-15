@@ -369,7 +369,7 @@ static ulong idaapi res_munmatch(void *obj,ulong n)
 /*              option is set in dialog box       */
 /*------------------------------------------------*/
 
-void propagate_match(deng_t * eng, sig_t * s1, sig_t * s2, int options)
+void propagate_match(deng_t * eng, psig_t * s1, psig_t * s2, int options)
 {
 	size_t i;
 	deng_t * d = NULL;
@@ -432,7 +432,7 @@ void propagate_match(deng_t * eng, sig_t * s1, sig_t * s2, int options)
 static ulong idaapi res_match(void *obj,ulong n)
 {
 	deng_t * eng = (deng_t *)obj;
-	sig_t * s1, * s2;
+	psig_t * s1, * s2;
 	int option;
 	ea_t ea = BADADDR;
 	size_t i;
