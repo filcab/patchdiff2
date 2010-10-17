@@ -52,7 +52,7 @@ pid_t create_process(char * cmd)
   pid = fork();
   if (pid == 0)
     {
-      qsnprintf(name, sizeof(name), "\"%s\"", cmd);
+      qsnprintf(name, sizeof(name), "'%s'", cmd);
       argv[0] = "sh";
       argv[1] = "-c";
       argv[3] = name;
@@ -137,6 +137,20 @@ long os_get_pid()
 int os_unlink(const char * path)
 {
   return unlink(path);
+}
+
+
+/*------------------------------------------------*/
+/* function : os_tempnam                          */
+/* description: returns a temporary file name     */
+/*------------------------------------------------*/
+
+void os_tempnam(char * data, size_t size, char * suffix)
+{
+	char * str;
+
+        str = tempnam(NULL, suffix);
+        qsnprintf(data, size, "%s", str);
 }
 
 
@@ -242,10 +256,10 @@ bool os_ipc_init(void ** data, long pid, int type)
     }
   else
     {
-      id->spipe = open(rname, O_RDWR|O_NONBLOCK);
+      id->spipe = open(rname, O_WRONLY);
       if (id->spipe == -1) goto error;
 
-      id->rpipe = open(sname, O_RDWR|O_NONBLOCK);
+      id->rpipe = open(sname, O_RDONLY);
       if (id->rpipe == -1) goto error;
     }
 

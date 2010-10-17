@@ -33,24 +33,6 @@
 ipc_config_t ipcc;
 
 
-void system_temp_name(char * data, size_t size)
-{
-	char name[QMAXPATH];
-	char * str;
-
-	qtmpnam(name, sizeof(name));
-	qsnprintf(data, size, "%s", name);
-
-#ifndef __WINDOWS
-	if (( str = getenv("TMPDIR")) == NULL) str = "/tmp";
-	if (strncmp(name, "./", 2) == 0)
-	  qsnprintf(data, size, "%s/%s", str, name);
-#endif
-
-	data[strlen(data)-4] = '\0';
-}
-
-
 /*------------------------------------------------*/
 /* function : generate_idc_file                   */
 /* description: generates an idc file to launch   */
@@ -129,7 +111,7 @@ bool ipc_init(char * file, int type, long id)
 			if (!ret)
 				return false;
 
-			system_temp_name(tmpname, sizeof(tmpname));
+			os_tempnam(tmpname, sizeof(tmpname), ".idc");
 			if (system_execute_second_instance(tmpname, BADADDR, file, false, pid, ipcc.data) != 0)
 			{
 				ipc_close();
@@ -271,7 +253,7 @@ slist_t * system_parse_idb(ea_t ea, char * file, options_t * opt)
 	slist_t * sl = NULL;
 	char tmpname[QMAXPATH];
 
-	system_temp_name(tmpname, sizeof(tmpname));
+	os_tempnam(tmpname, sizeof(tmpname), ".idc");
 
 	if (!options_use_ipc(opt))
 		system_execute_second_instance(tmpname, ea, file, true, 0, NULL);

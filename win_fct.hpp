@@ -37,6 +37,7 @@ int os_execute_command(char *, bool, void *);
 void os_copy_to_clipboard(char *);
 long os_get_pid();
 int os_unlink(const char *path);
+void os_tempname(char *, size_t, char *);
 
 // Shared memory functions
 bool os_ipc_send(void *, int, idata_t *);

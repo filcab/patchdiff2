@@ -140,6 +140,22 @@ int os_unlink(const char * path)
 
 
 /*------------------------------------------------*/
+/* function : os_tempnam                          */
+/* description: returns a temporary file name     */
+/*------------------------------------------------*/
+
+void os_tempnam(char * data, size_t size, char * suffix)
+{
+	char tmp[MAX_PATH];
+	char name[MAX_PATH];
+
+        GetTempFilePath(sizeof(tmp), tmp);
+        GetTempFileName(tmp, NULL, 0, name);
+        qsnprintf(data, size, "%s%s", str, (suffix) ? suffix: "");
+}
+
+
+/*------------------------------------------------*/
 /* function : os_ipc_send                         */
 /* description: Sends data on pipe                */
 /*------------------------------------------------*/
