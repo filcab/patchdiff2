@@ -28,7 +28,7 @@
 /* description: Initializes hash table to NULL    */
 /*------------------------------------------------*/
 
-hpsig_t * hash_init(unsigned int num)
+hpsig_t * hash_init(size_t num)
 {
 	unsigned int i;
 	hpsig_t * hsig;

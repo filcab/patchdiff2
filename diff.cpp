@@ -21,6 +21,7 @@
 #include <graph.hpp>
 #include <kernwin.hpp>
 
+#include "hash.hpp"
 #include "sig.hpp"
 #include "diff.hpp"
 #include "clist.hpp"
@@ -32,7 +33,7 @@
 /*------------------------------------------------*/
 /* function : diff_init_hash                      */
 /* description: Initializes a hash structure and  */
-/*				creates successor xrefs           */
+/*              creates successor xrefs           */
 /*------------------------------------------------*/
 
 hpsig_t * diff_init_hash(slist_t * sl)
