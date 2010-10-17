@@ -1,8 +1,8 @@
 PROC=patchdiff
 O1=backup
 O2=clist
-O3=diff
-O4=hash
+O3=hash
+O4=diff
 O5=ppc
 O6=x86
 O7=options
@@ -17,7 +17,6 @@ O14=unix_fct
 __CFLAGS=-m32
 __LFLAGS=-m32
 __PIC__ = 1
-__LINUX__ = 1
 
 include ../plugin.unx
 
@@ -27,7 +26,7 @@ $(F)backup$(O)  : $(I)ida.hpp sig.hpp diff.hpp options.hpp backup.hpp       \
 $(F)clist$(O)   : $(I)ida.hpp sig.hpp hash.hpp clist.hpp clist.cpp
 $(F)diff$(O)    : $(I)ida.hpp $(I)idp.hpp $(I)graph.hpp $(I)kernwin.hpp     \
 	          diff.hpp sig.hpp os.hpp clist.hpp display.hpp backup.hpp  \
-	          options.hpp diff.cpp
+	          options.hpp hash.hpp diff.cpp
 $(F)display$(O) : $(I)ida.hpp $(I)idp.hpp $(I)graph.hpp $(I)kernwin.hpp     \
 	          diff.hpp system.hpp os.hpp parser.hpp pgraph.hpp          \
 	          options.hpp display.hpp display.cpp
