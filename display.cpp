@@ -202,7 +202,7 @@ static void idaapi enter_unmatch(void *obj,uint32 n)
 }
 
 
-static ulong idaapi graph_list(slist_t * sl,uint32 n, options_t * opt)
+static uint32 idaapi graph_list(slist_t * sl,uint32 n, options_t * opt)
 {
 	slist_t * sl1 = NULL;
 	slist_t * sl2 = NULL;
