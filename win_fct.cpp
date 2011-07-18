@@ -149,9 +149,9 @@ void os_tempnam(char * data, size_t size, char * suffix)
 	char tmp[MAX_PATH];
 	char name[MAX_PATH];
 
-        GetTempFilePath(sizeof(tmp), tmp);
-        GetTempFileName(tmp, NULL, 0, name);
-        qsnprintf(data, size, "%s%s", str, (suffix) ? suffix: "");
+    GetTempPath(sizeof(tmp), tmp);
+    GetTempFileName(tmp, NULL, 0, name);
+    qsnprintf(data, size, "%s%s", name, (suffix) ? suffix: "");
 }
 
 
