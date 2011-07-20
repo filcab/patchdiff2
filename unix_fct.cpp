@@ -195,8 +195,7 @@ bool os_ipc_recv(void * data, int type, idata_t * d)
 	  FD_ZERO(&efds);
 	  FD_SET(id->rpipe, &efds);
 
-	  ret = select(1, &rfds, NULL, &efds, &tv);
-	  
+	  ret = select(id->rpipe+1, &rfds, NULL, &efds, &tv);
 	  if (ret > 0 && FD_ISSET(id->rpipe, &rfds))
 	    break;
 	  
@@ -212,7 +211,7 @@ bool os_ipc_recv(void * data, int type, idata_t * d)
       FD_ZERO(&efds);
       FD_SET(id->rpipe, &efds);
 
-      ret = select(1, &rfds, NULL, &efds, NULL);
+      ret = select(id->rpipe+1, &rfds, NULL, &efds, NULL);
       if (!(ret > 0 && FD_ISSET(id->rpipe, &rfds)))
 	return false;
     }
