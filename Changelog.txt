@@ -1,3 +1,8 @@
+PatchDiff v2.0.10:
+
+* Fixes idc issue with IDA 6.1
+* Fixes Unix support (tested on Fedora 15 32bit)
+
 PatchDiff v2.0.9:
 
 * Improves 'direct jump' detection (better compiler change detection in the next version)

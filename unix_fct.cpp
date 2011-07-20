@@ -32,6 +32,8 @@ struct ipc_data
 {
   int spipe;
   int rpipe;
+  char *sname;
+  char *rname;
   pid_t pid;
 };
 
@@ -242,6 +244,9 @@ bool os_ipc_init(void ** data, long pid, int type)
   qsnprintf(sname, sizeof(sname), "/tmp/pdiff2spipe%u", pid);
   qsnprintf(rname, sizeof(rname), "/tmp/pdiff2rpipe%u", pid);
   
+  id->sname = qstrdup(sname);
+  id->rname = qstrdup(rname);
+
   if (type == IPC_SERVER)
     {
       mkfifo(sname, 0666);
@@ -284,7 +289,8 @@ bool os_ipc_close(void * data)
   if (id->spipe) close(id->spipe);
   if (id->rpipe) close(id->rpipe);
 
-  /* TODO: unlink pipe */
+  os_unlink(id->sname);
+  os_unlink(id->rname);
   return true;
 }
 
