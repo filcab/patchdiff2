@@ -34,6 +34,9 @@
 #include "options.hpp"
 #include "system.hpp"
 
+#define dont_use_fprintf fprintf
+#define dont_use_fclose fclose
+#define dont_use_fopen fopen
 
 extern plugin_t PLUGIN;
 extern char *exename;
@@ -94,8 +97,8 @@ void run_first_instance()
 	int ret;
 
 	msg ("\n---------------------------------------------------\n"
-		"PatchDiff Plugin v2.0.9\n"
-		"Copyright (c) 2010, Nicolas Pouvesle\n"
+		"PatchDiff Plugin v2.0.10\n"
+		"Copyright (c) 2010-2011, Nicolas Pouvesle\n"
 		"Copyright (C) 2007-2009, Tenable Network Security, Inc\n"
 		"---------------------------------------------------\n\n");
 
@@ -151,11 +154,13 @@ void run_second_instance(const char * options)
 	ea_t ea = BADADDR;
 	unsigned char opt = 0;
 	long id;
+	unsigned int v;
 	bool cont;
 	char tmp[QMAXPATH*4];
-
-	qsscanf(options, "%u:%"FMT_EA"u:%u:%s", &id, &ea, &opt, file);
-
+	
+	qsscanf(options, "%u:%a:%u:%s", &id, &ea, &v, file);
+	opt = (unsigned char)v;
+	
 	if (id)
 	{
 		if (ipc_init(file, 2, id))
@@ -175,12 +180,14 @@ void run_second_instance(const char * options)
 	else
 	{
 		if (ea == BADADDR)
+		{
 			sl = parse_idb ();
+		}
 		else
 			sl = parse_fct(ea, opt);
 
 		if (!sl) return;
-
+		
 		siglist_save(sl, file);
 
 		siglist_free(sl);
@@ -220,3 +227,4 @@ plugin_t PLUGIN =
 		wanted_name,
 		wanted_hotkey
 };
+

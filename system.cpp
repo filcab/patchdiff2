@@ -70,7 +70,7 @@ int system_execute_second_instance(char * idc, ea_t ea, char * file, bool close,
 	if (generate_idc_file(idc))
 		return -1;
 
-	qsnprintf(cmd, sizeof(cmd), "%s -A -S\"%s\" -Opatchdiff2:%u:%"FMT_EA"u:%u:\"%s\" \"%s\"", 
+	qsnprintf(cmd, sizeof(cmd), "%s -A -S\"%s\" -Opatchdiff2:%u:%a:%u:\"%s\" \"%s\"", 
 									path,
 									idc,
 									id,
@@ -227,11 +227,11 @@ bool ipc_recv_cmd_end()
 void ipc_execute_second_instance(char * idc, ea_t ea, char * file)
 {
 	char cmd[QMAXPATH*4];
-	
+
 	if (!ipc_init(file, 1, 0))
 		return;
 
-	qsnprintf(cmd, sizeof(cmd), "%u:%"FMT_EA"u:%u:%s", 
+	qsnprintf(cmd, sizeof(cmd), "%u:%a:%u:%s", 
 									0,
 									ea,
 									dto.graph.s_showpref,

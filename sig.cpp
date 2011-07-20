@@ -1258,7 +1258,7 @@ int siglist_save(slist_t * sl, const char * filename)
 
 	fp = qfopen(filename, "wb+");
 	if (fp == 0) return -1;
-
+	
 	num = siglist_getnum(sl);
 	qfwrite(fp, &num, sizeof(num));
 

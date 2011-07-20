@@ -47,18 +47,17 @@ pid_t create_process(char * cmd)
 {
   pid_t pid;
   char * argv[4];
-  char name[512];
-
+  
   pid = fork();
   if (pid == 0)
     {
-      qsnprintf(name, sizeof(name), "'%s'", cmd);
-      argv[0] = "sh";
+      argv[0] = "/bin/sh";
       argv[1] = "-c";
-      argv[3] = name;
-      argv[4] = NULL;
+      argv[2] = cmd;
+      argv[3] = NULL;
 
       execvp(argv[0], argv);
+      exit(EXIT_FAILURE);
     }
 
   return pid;
@@ -149,8 +148,8 @@ void os_tempnam(char * data, size_t size, char * suffix)
 {
 	char * str;
 
-        str = tempnam(NULL, suffix);
-        qsnprintf(data, size, "%s", str);
+        str = tempnam(NULL, NULL);
+        qsnprintf(data, size, "%s%s", str, suffix);
 }
 
 
@@ -238,7 +237,7 @@ bool os_ipc_init(void ** data, long pid, int type)
   id = (ipc_data_t *)qalloc(sizeof(*id));
   if (!id)
     return false;
-  
+
   memset(id, '\0', sizeof(*id));
 	
   qsnprintf(sname, sizeof(sname), "/tmp/pdiff2spipe%u", pid);
