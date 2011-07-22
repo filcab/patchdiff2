@@ -1,3 +1,7 @@
+PatchDiff v2.0.10a:
+
+* Uses idaq.exe on Windows as idag.exe is not always present anymore (IDA 6.1 Standard?)
+
 PatchDiff v2.0.10:
 
 * Fixes idc issue with IDA 6.1
