@@ -96,7 +96,7 @@ int os_execute_command(char * cmd, bool close, void * data)
 /* description: checks process state              */
 /*------------------------------------------------*/
 
-bool os_check_process(void * handle)
+static bool os_check_process(void * handle)
 {
 	DWORD exitcode;
 

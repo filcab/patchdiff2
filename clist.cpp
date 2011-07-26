@@ -120,7 +120,7 @@ int clist_insert(clist_t * cl, psig_t * s)
 /* description: Inserts dsig in matched list      */
 /*------------------------------------------------*/
 
-int clist_insert_dsig(clist_t * cl, dpsig_t * ds)
+static int clist_insert_dsig(clist_t * cl, dpsig_t * ds)
 {
 	dpsig_t * prev, * cur;
 	int ret;

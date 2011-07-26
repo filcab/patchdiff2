@@ -46,7 +46,7 @@ cpu_t patchdiff_cpu;
 options_t * d_opt;
 
 
-int idaapi init(void)
+static int idaapi init(void)
 {
 	if (!strcmp(inf.procName, "metapc"))
 	{
@@ -74,7 +74,7 @@ int idaapi init(void)
 	return PLUGIN_OK;
 }
 
-void idaapi term(void)
+static void idaapi term(void)
 {
 	if (d_engine)
 	{
@@ -89,7 +89,7 @@ void idaapi term(void)
 }
 
 
-void run_first_instance()
+static void run_first_instance()
 {
 	char * file;
 	slist_t * sl1 = NULL;
@@ -147,7 +147,7 @@ void run_first_instance()
 }
 
 
-void run_second_instance(const char * options)
+static void run_second_instance(const char * options)
 {
 	slist_t * sl;
 	char file[QMAXPATH];
@@ -195,7 +195,7 @@ void run_second_instance(const char * options)
 }
 
 
-void idaapi run(int arg)
+static void idaapi run(int arg)
 {
 	const char * options = NULL;
 

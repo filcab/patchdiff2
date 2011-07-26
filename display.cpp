@@ -539,7 +539,7 @@ static uint32 idaapi res_flagged(void *obj,uint32 n)
 /* description: Displays matched list             */
 /*------------------------------------------------*/
 
-void display_matched(deng_t * eng)
+static void display_matched(deng_t * eng)
 {
 	choose2(false,			  // non-modal window
 		-1, -1, -1, -1,       // position is determined by Windows
@@ -575,7 +575,7 @@ void display_matched(deng_t * eng)
 /* description: Displays identical list           */
 /*------------------------------------------------*/
 
-void display_identical(deng_t * eng)
+static void display_identical(deng_t * eng)
 {
 	choose2(false,			  // non-modal window
 		-1, -1, -1, -1,       // position is determined by Windows
@@ -608,7 +608,7 @@ void display_identical(deng_t * eng)
 /* description: Displays unmatched list           */
 /*------------------------------------------------*/
 
-void display_unmatched(deng_t * eng)
+static void display_unmatched(deng_t * eng)
 {
 	choose2(false,			  // non-modal window
 		-1, -1, -1, -1,       // position is determined by Windows

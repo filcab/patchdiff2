@@ -36,7 +36,7 @@
 /*              creates successor xrefs           */
 /*------------------------------------------------*/
 
-hpsig_t * diff_init_hash(slist_t * sl)
+static hpsig_t * diff_init_hash(slist_t * sl)
 {
 	fref_t * fref;
 	psig_t * sig;
@@ -99,7 +99,7 @@ hpsig_t * diff_init_hash(slist_t * sl)
 /* description: Initializes slist crefs           */
 /*------------------------------------------------*/
 
-int slist_init_crefs(slist_t * l)
+static int slist_init_crefs(slist_t * l)
 {
 	hpsig_t * h = NULL;
 	clist_t * cl1, * cl2;
@@ -125,7 +125,7 @@ int slist_init_crefs(slist_t * l)
 /* description: Initializes engine structures     */
 /*------------------------------------------------*/
 
-deng_t * diff_engine_initialize(slist_t * l1, slist_t * l2, options_t * opt)
+static deng_t * diff_engine_initialize(slist_t * l1, slist_t * l2, options_t * opt)
 {
 	deng_t * eng;
 
@@ -194,7 +194,7 @@ bool sig_equal(psig_t * s1, psig_t * s2, int type)
 /* description: Checks if 2 sig names are equal   */
 /*------------------------------------------------*/
 
-bool sig_name_equal(psig_t * s1, psig_t * s2)
+static bool sig_name_equal(psig_t * s1, psig_t * s2)
 {
 	if (!strncmp(s1->name, "sub_", 4) || strcmp(s1->name, s2->name))
 		return false;
@@ -208,7 +208,7 @@ bool sig_name_equal(psig_t * s1, psig_t * s2)
 /*              clist match                       */
 /*------------------------------------------------*/
 
-bool clist_equal_match(clist_t * cl1, clist_t * cl2)
+static bool clist_equal_match(clist_t * cl1, clist_t * cl2)
 {
 	dpsig_t * s1, * s2;
 	size_t i;
@@ -241,7 +241,7 @@ bool clist_equal_match(clist_t * cl1, clist_t * cl2)
 /*              clist match                       */
 /*------------------------------------------------*/
 
-bool clist_almost_equal_match(clist_t * cl1, clist_t * cl2)
+static bool clist_almost_equal_match(clist_t * cl1, clist_t * cl2)
 {
 	dpsig_t * s1, * s2;
 	size_t i, k;
@@ -281,7 +281,7 @@ bool clist_almost_equal_match(clist_t * cl1, clist_t * cl2)
 /* note: changes ds if ds already matched         */
 /*------------------------------------------------*/
 
-dpsig_t * clist_get_unique_sig(clist_t * cl, dpsig_t ** ds, int type)
+static dpsig_t * clist_get_unique_sig(clist_t * cl, dpsig_t ** ds, int type)
 {
 	dpsig_t * ptr, * tmp;
 
@@ -372,7 +372,7 @@ dpsig_t * clist_get_unique_sig(clist_t * cl, dpsig_t ** ds, int type)
 /*       next signature in the list               */
 /*------------------------------------------------*/
 
-dpsig_t * clist_get_best_sig(clist_t * cl, int type)
+static dpsig_t * clist_get_best_sig(clist_t * cl, int type)
 {
 	dpsig_t * best, * ptr;
 
@@ -400,7 +400,7 @@ dpsig_t * clist_get_best_sig(clist_t * cl, int type)
 /*              in list and unique                */
 /*------------------------------------------------*/
 
-dpsig_t * clist_get_eq_sig(clist_t * cl, dpsig_t * dsig, int type)
+static dpsig_t * clist_get_eq_sig(clist_t * cl, dpsig_t * dsig, int type)
 {
 	dpsig_t * ds, * ptr;
 	bool b2, b1 = sig_is_class(dsig->sig);
@@ -482,7 +482,7 @@ dpsig_t * clist_get_eq_sig(clist_t * cl, dpsig_t * dsig, int type)
 }
 
 
-void clist_update_crefs(clist_t * cl, dpsig_t * ds, int type)
+static void clist_update_crefs(clist_t * cl, dpsig_t * ds, int type)
 {
 	dpsig_t * tmp, * next;
 	dpsig_t * tmp2, * next2;
@@ -514,7 +514,7 @@ void clist_update_crefs(clist_t * cl, dpsig_t * ds, int type)
 }
 
 
-void clist_update_and_remove(clist_t * cl, dpsig_t * ds)
+static void clist_update_and_remove(clist_t * cl, dpsig_t * ds)
 {
 	if (ds->removed)
 		return;
@@ -531,7 +531,7 @@ void clist_update_and_remove(clist_t * cl, dpsig_t * ds)
 /* description: Runs binary analysis              */
 /*------------------------------------------------*/
 
-int diff_run(deng_t * eng, clist_t * cl1, clist_t * cl2, int min_type, int max_type, bool pclass)
+static int diff_run(deng_t * eng, clist_t * cl1, clist_t * cl2, int min_type, int max_type, bool pclass)
 {
 	dpsig_t * dsig, * dsig2;
 	int changed = 0;

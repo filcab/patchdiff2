@@ -24,7 +24,7 @@
 #include "backup.hpp"
 
 
-void buffer_serialize_data(char * buf, size_t blen, size_t * pos, void * data, size_t dsize)
+static void buffer_serialize_data(char * buf, size_t blen, size_t * pos, void * data, size_t dsize)
 {
 	if ( (*pos + dsize) > blen)
 	{
@@ -37,7 +37,7 @@ void buffer_serialize_data(char * buf, size_t blen, size_t * pos, void * data, s
 }
 
 
-void buffer_unserialize_data(char * buf, size_t blen, size_t * pos, void * data, size_t dsize)
+static void buffer_unserialize_data(char * buf, size_t blen, size_t * pos, void * data, size_t dsize)
 {
 	if ( (*pos + dsize) > blen)
 	{
@@ -50,73 +50,73 @@ void buffer_unserialize_data(char * buf, size_t blen, size_t * pos, void * data,
 }
 
 
-void buffer_serialize_ea(char * buf, size_t blen, size_t * pos, ea_t ea)
+static void buffer_serialize_ea(char * buf, size_t blen, size_t * pos, ea_t ea)
 {
 	buffer_serialize_data(buf, blen, pos, &ea, sizeof(ea));
 }
 
 
-void buffer_serialize_bool(char * buf, size_t blen, size_t * pos, bool b)
+static void buffer_serialize_bool(char * buf, size_t blen, size_t * pos, bool b)
 {
 	buffer_serialize_data(buf, blen, pos, &b, sizeof(b));
 }
 
 
-void buffer_serialize_char(char * buf, size_t blen, size_t * pos, char c)
+static void buffer_serialize_char(char * buf, size_t blen, size_t * pos, char c)
 {
 	buffer_serialize_data(buf, blen, pos, &c, sizeof(c));
 }
 
 
-void buffer_serialize_int(char * buf, size_t blen, size_t * pos, int i)
+static void buffer_serialize_int(char * buf, size_t blen, size_t * pos, int i)
 {
 	buffer_serialize_data(buf, blen, pos, &i, sizeof(i));
 }
 
 
-void buffer_serialize_long(char * buf, size_t blen, size_t * pos, unsigned long l)
+static void buffer_serialize_long(char * buf, size_t blen, size_t * pos, unsigned long l)
 {
 	buffer_serialize_data(buf, blen, pos, &l, sizeof(l));
 }
 
 
-void buffer_serialize_size(char * buf, size_t blen, size_t * pos, size_t size)
+static void buffer_serialize_size(char * buf, size_t blen, size_t * pos, size_t size)
 {
 	buffer_serialize_data(buf, blen, pos, &size, sizeof(size));
 }
 
 
-void buffer_unserialize_ea(char * buf, size_t blen, size_t * pos, ea_t * ea)
+static void buffer_unserialize_ea(char * buf, size_t blen, size_t * pos, ea_t * ea)
 {
 	buffer_unserialize_data(buf, blen, pos, ea, sizeof(*ea));
 }
 
 
-void buffer_unserialize_bool(char * buf, size_t blen, size_t * pos, bool * b)
+static void buffer_unserialize_bool(char * buf, size_t blen, size_t * pos, bool * b)
 {
 	buffer_unserialize_data(buf, blen, pos, b, sizeof(*b));
 }
 
 
-void buffer_unserialize_char(char * buf, size_t blen, size_t * pos, char * c)
+static void buffer_unserialize_char(char * buf, size_t blen, size_t * pos, char * c)
 {
 	buffer_unserialize_data(buf, blen, pos, c, sizeof(*c));
 }
 
 
-void buffer_unserialize_int(char * buf, size_t blen, size_t * pos, int * i)
+static void buffer_unserialize_int(char * buf, size_t blen, size_t * pos, int * i)
 {
 	buffer_unserialize_data(buf, blen, pos, i, sizeof(*i));
 }
 
 
-void buffer_unserialize_long(char * buf, size_t blen, size_t * pos, unsigned long * l)
+static void buffer_unserialize_long(char * buf, size_t blen, size_t * pos, unsigned long * l)
 {
 	buffer_unserialize_data(buf, blen, pos, l, sizeof(*l));
 }
 
 
-void buffer_unserialize_size(char * buf, size_t blen, size_t * pos, size_t * size)
+static void buffer_unserialize_size(char * buf, size_t blen, size_t * pos, size_t * size)
 {
 	buffer_unserialize_data(buf, blen, pos, size, sizeof(*size));
 }
@@ -127,7 +127,7 @@ void buffer_unserialize_size(char * buf, size_t blen, size_t * pos, size_t * siz
 /* description: Serializes a string               */
 /*------------------------------------------------*/
 
-void buffer_serialize_string(char * buf, size_t blen, size_t * pos, char * s)
+static void buffer_serialize_string(char * buf, size_t blen, size_t * pos, char * s)
 {
 	size_t len;
 
@@ -148,7 +148,7 @@ void buffer_serialize_string(char * buf, size_t blen, size_t * pos, char * s)
 /* description: Unserializes a string             */
 /*------------------------------------------------*/
 
-void buffer_unserialize_string(char * buf, size_t blen, size_t * pos, char ** s)
+static void buffer_unserialize_string(char * buf, size_t blen, size_t * pos, char ** s)
 {
 	*s = qstrdup(buf+*pos);
 	*pos += strlen(*s) + 1;
@@ -160,7 +160,7 @@ void buffer_unserialize_string(char * buf, size_t blen, size_t * pos, char ** s)
 /* description: Serializes a signature            */
 /*------------------------------------------------*/
 
-size_t singleton_serialize(char * buf, size_t blen, psig_t * s, int nfile)
+static size_t singleton_serialize(char * buf, size_t blen, psig_t * s, int nfile)
 {
 	size_t pos = 0;
 	fref_t * fref = NULL;
@@ -218,7 +218,7 @@ size_t singleton_serialize(char * buf, size_t blen, psig_t * s, int nfile)
 /* description: Serializes a signature            */
 /*------------------------------------------------*/
 
-size_t singleton_unserialize(char * buf, size_t blen, psig_t ** s, int version)
+static size_t singleton_unserialize(char * buf, size_t blen, psig_t ** s, int version)
 {
 	char tmp[512];
 	size_t pos = 0;
@@ -286,7 +286,7 @@ size_t singleton_unserialize(char * buf, size_t blen, psig_t ** s, int version)
 /*              matched signature                 */
 /*------------------------------------------------*/
 
-size_t pair_serialize(char * buf, size_t blen, psig_t * s)
+static size_t pair_serialize(char * buf, size_t blen, psig_t * s)
 {
 	size_t len;
 
@@ -303,7 +303,7 @@ size_t pair_serialize(char * buf, size_t blen, psig_t * s)
 /*              matched signature                 */
 /*------------------------------------------------*/
 
-size_t pair_unserialize(char * buf, size_t blen, psig_t ** s, int version)
+static size_t pair_unserialize(char * buf, size_t blen, psig_t ** s, int version)
 {
 	size_t len;
 
@@ -322,7 +322,7 @@ size_t pair_unserialize(char * buf, size_t blen, psig_t ** s, int version)
 /*              netnode                           */
 /*------------------------------------------------*/
 
-void backup_save_list(char * node_name, slist_t * sl)
+static void backup_save_list(char * node_name, slist_t * sl)
 {
 	char buf[5000];
 	size_t i;
@@ -362,7 +362,7 @@ void backup_save_list(char * node_name, slist_t * sl)
 /* description: Loads result list from a netnode  */
 /*------------------------------------------------*/
 
-bool backup_load_list(char * node_name, slist_t * sl, int type, int version)
+static bool backup_load_list(char * node_name, slist_t * sl, int type, int version)
 {
 	char buf[5000];
 	size_t i;
@@ -409,7 +409,7 @@ bool backup_load_list(char * node_name, slist_t * sl, int type, int version)
 /* description: Removes node from the IDB         */
 /*------------------------------------------------*/
 
-void backup_free_node(char * node_name, size_t size)
+static void backup_free_node(char * node_name, size_t size)
 {
 	netnode node;
 	size_t i;
@@ -433,7 +433,7 @@ void backup_free_node(char * node_name, size_t size)
 /* description: Removes results from the IDB      */
 /*------------------------------------------------*/
 
-void backup_cleanup(deng_t * eng)
+static void backup_cleanup(deng_t * eng)
 {
 	backup_free_node("$ pdiff2_matched", eng->mlist ? eng->mlist->org_num : 0);
 	backup_free_node("$ pdiff2_identical", eng->ilist ? eng->ilist->org_num : 0);
@@ -448,7 +448,7 @@ void backup_cleanup(deng_t * eng)
 /* description:Saves engine data inside a netnode */
 /*------------------------------------------------*/
 
-void backup_save_eng(char * node_name, deng_t * eng)
+static void backup_save_eng(char * node_name, deng_t * eng)
 {
 	char buf[1000];
 	char * file;
@@ -510,7 +510,7 @@ void backup_save_eng(char * node_name, deng_t * eng)
 /* description:Loads engine data inside a netnode */
 /*------------------------------------------------*/
 
-deng_t * backup_load_eng(char * node_name, options_t * opt, int * version)
+static deng_t * backup_load_eng(char * node_name, options_t * opt, int * version)
 {
 	char buf[1000];
 	deng_t * eng;

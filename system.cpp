@@ -40,7 +40,7 @@ ipc_config_t ipcc;
 /*              mode                              */
 /*------------------------------------------------*/
 
-int generate_idc_file(char * file)
+static int generate_idc_file(char * file)
 {
 	FILE * fp;
 
@@ -59,7 +59,7 @@ int generate_idc_file(char * file)
 /* description: Executes another IDA instance     */
 /*------------------------------------------------*/
 
-int system_execute_second_instance(char * idc, ea_t ea, char * file, bool close, long id, void * data)
+static int system_execute_second_instance(char * idc, ea_t ea, char * file, bool close, long id, void * data)
 {
 	char path[QMAXPATH*4];
 	char cmd[QMAXPATH*4];
@@ -155,7 +155,7 @@ void ipc_close()
 /*              IDA instance                      */
 /*------------------------------------------------*/
 
-bool ipc_send_cmd(char * cmd)
+static bool ipc_send_cmd(char * cmd)
 {
 	idata_t d;
 
@@ -224,7 +224,7 @@ bool ipc_recv_cmd_end()
 /*              instance                          */
 /*------------------------------------------------*/
 
-void ipc_execute_second_instance(char * idc, ea_t ea, char * file)
+static void ipc_execute_second_instance(char * idc, ea_t ea, char * file)
 {
 	char cmd[QMAXPATH*4];
 

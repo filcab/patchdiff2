@@ -24,7 +24,7 @@
 #include "system.hpp"
 
 
-bool idaapi pdiff_menu_callback(void *ud)
+static bool idaapi pdiff_menu_callback(void *ud)
 {
 	ushort option, prev;
 	options_t * opt = (options_t *)ud;

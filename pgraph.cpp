@@ -27,7 +27,7 @@
 #include "diff.hpp"
 
 
-int find_node(slist_t * sl, ea_t ea)
+static int find_node(slist_t * sl, ea_t ea)
 {
 	size_t i;
 
@@ -44,7 +44,7 @@ int find_node(slist_t * sl, ea_t ea)
 /* description: Menu callback                     */
 /*------------------------------------------------*/
 
-bool idaapi menu_callback(void *ud)
+static bool idaapi menu_callback(void *ud)
 {
 	int node;
 	slist_t * sl = (slist_t *)ud;
@@ -224,7 +224,7 @@ static int idaapi graph_callback(void * ud, int code, va_list va)
 /* description: Creates s function graph          */
 /*------------------------------------------------*/
 
-graph_viewer_t * pgraph_create(slist_t * sl, int num, slist_t * sl2, graph_viewer_t * gv_prev)
+static graph_viewer_t * pgraph_create(slist_t * sl, int num, slist_t * sl2, graph_viewer_t * gv_prev)
 {
 	HWND hwnd = NULL;
 	char buf[512];
