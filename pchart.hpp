@@ -1,6 +1,6 @@
 /* 
    Patchdiff2
-   Portions (C) 2010 Nicolas Pouvesle
+   Portions (C) 2010 - 2011 Nicolas Pouvesle
    Portions (C) 2007 - 2009 Tenable Network Security, Inc.
    
    This program is free software; you can redistribute it and/or modify
