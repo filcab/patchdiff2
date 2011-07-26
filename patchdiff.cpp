@@ -34,10 +34,6 @@
 #include "options.hpp"
 #include "system.hpp"
 
-#define dont_use_fprintf fprintf
-#define dont_use_fclose fclose
-#define dont_use_fopen fopen
-
 extern plugin_t PLUGIN;
 extern char *exename;
 
