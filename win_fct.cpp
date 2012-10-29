@@ -17,9 +17,9 @@
 */
 
 
-#include <windows.h>
-#include <ida.hpp>
-#include <kernwin.hpp>
+// Must be included before idp.hpp
+#include <Windows.h>
+#include "precomp.hpp"
 
 #include "win_fct.hpp"
 #include "system.hpp"
@@ -169,7 +169,7 @@ bool os_ipc_send(void * data, int type, idata_t * d)
 
 	lock = (type == IPC_SERVER) ? id->slock : id->rlock;
 
-	return (bool)SetEvent(lock);
+	return SetEvent(lock) == TRUE;
 }
 
 

@@ -16,12 +16,8 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <pro.h>
-#include <ida.hpp>
-#include <funcs.hpp>
-#include <fpro.h>
-#include <diskio.hpp>
-#include <kernwin.hpp>
+
+#include "precomp.hpp"
 
 #include "parser.hpp"
 #include "sig.hpp"

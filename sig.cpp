@@ -16,24 +16,8 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifdef NO_OBSOLETE_FUNCS
-#undef NO_OBSOLETE_FUNCS
-#endif
 
-#include <pro.h>
-#include <ida.hpp>
-#include <xref.hpp>
-#include <gdl.hpp>
-#include <bytes.hpp>
-#include <funcs.hpp>
-#include <kernwin.hpp>
-#include <fpro.h>
-#include <diskio.hpp>
-#include <name.hpp>
-#include <ua.hpp>
-#include <demangle.hpp>
-
-#include <stdio.h>
+#include "precomp.hpp"
 
 #include "sig.hpp"
 #include "x86.hpp"

@@ -17,13 +17,7 @@
 */
 
 
-#include <stdio.h>
-#include <ida.hpp>
-#include <loader.hpp>
-#include <kernwin.hpp>
-#include <idp.hpp>
-#include <diskio.hpp>
-#include <auto.hpp>
+#include "precomp.hpp"
 
 #include "sig.hpp"
 #include "parser.hpp"

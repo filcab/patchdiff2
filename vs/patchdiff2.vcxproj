@@ -157,6 +157,7 @@
     <ClInclude Include="..\pchart.hpp" />
     <ClInclude Include="..\pgraph.hpp" />
     <ClInclude Include="..\ppc.hpp" />
+    <ClInclude Include="..\precomp.hpp" />
     <ClInclude Include="..\sig.hpp" />
     <ClInclude Include="..\system.hpp" />
     <ClInclude Include="..\unix_fct.hpp">
@@ -180,6 +181,12 @@
     <ClCompile Include="..\pchart.cpp" />
     <ClCompile Include="..\pgraph.cpp" />
     <ClCompile Include="..\ppc.cpp" />
+    <ClCompile Include="..\precomp.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug64|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release64|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\sig.cpp" />
     <ClCompile Include="..\system.cpp" />
     <ClCompile Include="..\unix_fct.cpp">

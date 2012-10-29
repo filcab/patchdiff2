@@ -17,9 +17,7 @@
 */
 
 
-#include <ida.hpp>
-#include <bytes.hpp>
-#include <kernwin.hpp>
+#include "precomp.hpp"
 
 #include "ppc.hpp"
 #include "patchdiff.hpp"

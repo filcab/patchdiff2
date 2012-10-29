@@ -16,10 +16,8 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <ida.hpp>
-#include <idp.hpp>
-#include <graph.hpp>
-#include <kernwin.hpp>
+
+#include "precomp.hpp"
 
 #include "hash.hpp"
 #include "sig.hpp"

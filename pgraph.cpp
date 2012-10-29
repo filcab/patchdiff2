@@ -17,10 +17,7 @@
 */
 
 
-#include <ida.hpp>
-#include <idp.hpp>
-#include <graph.hpp>
-#include <kernwin.hpp>
+#include "precomp.hpp"
 
 #include "pgraph.hpp"
 #include "sig.hpp"

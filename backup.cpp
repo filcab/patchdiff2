@@ -16,7 +16,8 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <ida.hpp>
+
+#include "precomp.hpp"
 
 #include "sig.hpp"
 #include "diff.hpp"

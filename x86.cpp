@@ -17,8 +17,7 @@
 */
 
 
-#include <ida.hpp>
-#include <bytes.hpp>
+#include "precomp.hpp"
 
 #include "x86.hpp"
 #include "patchdiff.hpp"

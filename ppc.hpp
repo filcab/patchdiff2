@@ -20,7 +20,7 @@
 #ifndef __PPC_H__
 #define __PPC_H__
 
-#include <ida.hpp>
+#include "precomp.hpp"
 
 unsigned char ppc_get_byte(ea_t);
 bool ppc_remove_instr(unsigned char, ea_t);

@@ -17,11 +17,7 @@
 */
 
 
-#include <pro.h>
-#include <ida.hpp>
-#include <fpro.h>
-#include <diskio.hpp>
-#include <kernwin.hpp>
+#include "precomp.hpp"
 
 #include "sig.hpp"
 #include "system.hpp"

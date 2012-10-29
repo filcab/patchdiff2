@@ -17,8 +17,7 @@
 */
 
 
-#include <ida.hpp>
-#include <kernwin.hpp>
+#include "precomp.hpp"
 
 #include "options.hpp"
 #include "system.hpp"
@@ -26,7 +25,7 @@
 
 static bool idaapi pdiff_menu_callback(void *ud)
 {
-	ushort option, prev;
+	ushort option = 0, prev = 0;
 	options_t * opt = (options_t *)ud;
 
 	const char format[] =
@@ -38,13 +37,14 @@ static bool idaapi pdiff_menu_callback(void *ud)
 			"<#Saves PatchDiff2 results into the current IDB#Save results to IDB :C>>\n\n"
 			;
 
-	option = opt->ipc | (opt->save_db << 1);
+	option |= opt->ipc ? 1 : 0;
+	option |= opt->save_db ? 2 : 0;
 	prev = opt->ipc;
 
 	if (AskUsingForm_c(format, &option))
 	{
-		opt->ipc = (bool)option & 1;
-		opt->save_db = (bool)option >> 1;
+		opt->ipc = !!(option & 1);
+		opt->save_db = !!(option & 2);
 
 		if (prev && !option)
 			ipc_close();
@@ -63,12 +63,12 @@ options_t * options_init()
 	if (!opt) return NULL;
 
 	if (system_get_pref("IPC", (void *)&ipc, SPREF_INT))
-		opt->ipc = (bool)ipc;
+		opt->ipc = !!ipc;
 	else
 		opt->ipc = true;
 
 	if (system_get_pref("DB", (void *)&db, SPREF_INT))
-		opt->save_db = (bool)db;
+		opt->save_db = !!db;
 	else
 		opt->save_db = true;
 

@@ -19,7 +19,7 @@
 #ifndef __PX86_H__
 #define __PX86_H__
 
-#include <ida.hpp>
+#include "precomp.hpp"
 
 unsigned char x86_get_byte(ea_t);
 bool x86_remove_instr(unsigned char, ea_t);

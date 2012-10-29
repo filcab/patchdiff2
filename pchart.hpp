@@ -20,9 +20,7 @@
 #ifndef __PCHART_H__
 #define __PCHART_H__
 
-#include <ida.hpp>
-#include <funcs.hpp>
-#include <gdl.hpp>
+#include "precomp.hpp"
 
 struct pedge_t
 {

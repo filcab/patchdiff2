@@ -17,13 +17,7 @@
 */
 
 
-#include <stack>
-
-#include <pro.h>
-#include <ida.hpp>
-#include <funcs.hpp>
-#include <gdl.hpp>
-#include <xref.hpp>
+#include "precomp.hpp"
 
 #include "pchart.hpp"
 #include "patchdiff.hpp"

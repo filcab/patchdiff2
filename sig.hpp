@@ -20,10 +20,8 @@
 #ifndef __SIG_H__
 #define __SIG_H__
 
-#include <ida.hpp>
-#include <funcs.hpp>
-#include <gdl.hpp>
-#include <graph.hpp>
+#include "precomp.hpp"
+
 
 #define DIFF_UNMATCHED -1
 
