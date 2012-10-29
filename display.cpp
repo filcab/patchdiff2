@@ -555,6 +555,33 @@ static uint32 idaapi res_flagged(void *obj,uint32 n)
 }
 
 
+static void transfer_sym(psig_t *sig)
+{
+	psig_t *rhs = sig->msig;
+	sig_set_name(sig, rhs->name);
+	set_name(sig->startEA, rhs->name, SN_NOCHECK | SN_NON_AUTO);
+}
+
+
+static uint32 idaapi transfer_sym_match(void *obj, uint32 n)
+{
+	psig_t *sig = ui_access_sig(((deng_t *)obj)->mlist, n);
+
+	transfer_sym(sig);
+
+	return 1;
+}
+
+
+static uint32 idaapi transfer_sym_identical(void *obj, uint32 n)
+{
+	psig_t *sig = ui_access_sig(((deng_t *)obj)->ilist, n);
+
+	transfer_sym(sig);
+
+	return 1;
+}
+
 /*------------------------------------------------*/
 /* function : display_matched                     */
 /* description: Displays matched list             */
@@ -586,6 +613,7 @@ static void display_matched(deng_t * eng)
 	add_chooser_command(title_match, "Unmatch", res_munmatch, 0, -1, CHOOSER_POPUP_MENU | CHOOSER_MENU_EDIT);
 	add_chooser_command(title_match, "Set as identical", res_mtoi, 0, -1, CHOOSER_POPUP_MENU | CHOOSER_MENU_EDIT);
 	add_chooser_command(title_match, "Flag/unflag", res_flagged, 0, -1, CHOOSER_POPUP_MENU | CHOOSER_MENU_EDIT);
+	add_chooser_command(title_match, "Import Symbol", transfer_sym_match, 0, -1, CHOOSER_POPUP_MENU | CHOOSER_MENU_EDIT);
 }
 
 
@@ -619,6 +647,7 @@ static void display_identical(deng_t * eng)
 	
 	add_chooser_command(title_identical, "Unmatch", res_iunmatch, 0, -1, CHOOSER_POPUP_MENU | CHOOSER_MENU_EDIT);
 	add_chooser_command(title_identical, "Set as matched", res_itom, 0, -1, CHOOSER_POPUP_MENU | CHOOSER_MENU_EDIT);
+	add_chooser_command(title_identical, "Import Symbol", transfer_sym_identical, 0, -1, CHOOSER_POPUP_MENU | CHOOSER_MENU_EDIT);
 }
 
 
