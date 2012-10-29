@@ -28,13 +28,14 @@
 #include "system.hpp"
 
 
-static uint32 idaapi sizer_dlist(slist_t * sl)
+static uint32 idaapi sizer_dlist(slist_t *sl)
 {
 	if (sl)
 		return sl->num;
 
 	return 0;
 }
+
 
 static uint32 idaapi sizer_match(void *obj)
 {
@@ -54,13 +55,13 @@ static uint32 idaapi sizer_identical(void *obj)
 
 static uint32 idaapi sizer_unmatch(void *obj)
 {
-	if (obj)
-		return ((deng_t *)obj)->ulist->num;
+	deng_t * d = (deng_t *)obj;
 
-	return 0;
+	return sizer_dlist(d ? d->ulist : NULL);
 }
 
-static void idaapi close(void *obj)
+
+static void idaapi close_window(void *obj)
 {
 	deng_t * d = (deng_t *)obj;
 
@@ -69,6 +70,24 @@ static void idaapi close(void *obj)
 		ipc_close();
 
 	return;
+}
+
+
+/*------------------------------------------------*/
+/* function : ui_access_sig                       */
+/* description: Compensates for the zero index    */
+/*         indicating the header row and performs */
+/*         bounds checking in debug               */
+/*------------------------------------------------*/
+
+static psig_t *ui_access_sig(slist_t *sl, uint32 n)
+{
+#ifdef _DEBUG
+	if (!sl || n == 0 || n > sl->num)
+		error("ui attempted to access siglist out-of-bounds: %p %x\n", sl, n - 1);
+	else
+#endif
+		return sl->sigs[n - 1];
 }
 
 
@@ -84,14 +103,15 @@ static void idaapi desc_dlist(slist_t * sl,uint32 n,char * const *arrptr)
 	}
 	else
 	{
-		qsnprintf(arrptr[0], MAXSTR, "%u", sl->sigs[n-1]->mtype);
-		qsnprintf(arrptr[1], MAXSTR, "%s", sl->sigs[n-1]->name);
-		qsnprintf(arrptr[2], MAXSTR, "%s", sl->sigs[n-1]->msig->name);
-		qsnprintf(arrptr[3], MAXSTR, "%a", sl->sigs[n-1]->startEA);
-		qsnprintf(arrptr[4], MAXSTR, "%a", sl->sigs[n-1]->msig->startEA);
-		qsnprintf(arrptr[5], MAXSTR, "%c", sl->sigs[n-1]->id_crc ? '+' : '-');
-		qsnprintf(arrptr[6], MAXSTR, "%a", sl->sigs[n-1]->crc_hash);
-		qsnprintf(arrptr[7], MAXSTR, "%a", sl->sigs[n-1]->msig->crc_hash);
+		psig_t *sig = ui_access_sig(sl, n);
+		qsnprintf(arrptr[0], MAXSTR, "%u", sig->mtype);
+		qsnprintf(arrptr[1], MAXSTR, "%s", sig->name);
+		qsnprintf(arrptr[2], MAXSTR, "%s", sig->msig->name);
+		qsnprintf(arrptr[3], MAXSTR, "%a", sig->startEA);
+		qsnprintf(arrptr[4], MAXSTR, "%a", sig->msig->startEA);
+		qsnprintf(arrptr[5], MAXSTR, "%c", sig->id_crc ? '+' : '-');
+		qsnprintf(arrptr[6], MAXSTR, "%a", sig->crc_hash);
+		qsnprintf(arrptr[7], MAXSTR, "%a", sig->msig->crc_hash);
 	}
 }
 
@@ -130,7 +150,6 @@ static void idaapi desc_identical(void *obj,uint32 n,char * const *arrptr)
 static void idaapi desc_unmatch(void *obj,uint32 n,char * const *arrptr)
 {
 	int i;
-	slist_t * sl;
 
 	/* header */
 	if (n == 0)
@@ -140,21 +159,20 @@ static void idaapi desc_unmatch(void *obj,uint32 n,char * const *arrptr)
 	}
 	else
 	{
-		sl = ((deng_t *)obj)->ulist;
-
-		qsnprintf(arrptr[0], MAXSTR, "%u", sl->sigs[n-1]->nfile);
-		qsnprintf(arrptr[1], MAXSTR, "%s", sl->sigs[n-1]->name);
-		qsnprintf(arrptr[2], MAXSTR, "%a", sl->sigs[n-1]->startEA);
-		qsnprintf(arrptr[3], MAXSTR, "%.8X", sl->sigs[n-1]->sig);
-		qsnprintf(arrptr[4], MAXSTR, "%.8X", sl->sigs[n-1]->hash);
-		qsnprintf(arrptr[5], MAXSTR, "%.8X", sl->sigs[n-1]->crc_hash);
+		psig_t *sig = ui_access_sig(((deng_t *)obj)->ulist, n);
+		qsnprintf(arrptr[0], MAXSTR, "%u", sig->nfile);
+		qsnprintf(arrptr[1], MAXSTR, "%s", sig->name);
+		qsnprintf(arrptr[2], MAXSTR, "%a", sig->startEA);
+		qsnprintf(arrptr[3], MAXSTR, "%.8X", sig->sig);
+		qsnprintf(arrptr[4], MAXSTR, "%.8X", sig->hash);
+		qsnprintf(arrptr[5], MAXSTR, "%.8X", sig->crc_hash);
 	}
 }
 
 
 static void idaapi enter_list(slist_t * sl,uint32 n)
 {
-	jumpto(sl->sigs[n-1]->startEA);
+	jumpto(ui_access_sig(sl, n)->startEA);
 	os_copy_to_clipboard(NULL);
 }
 
@@ -191,10 +209,10 @@ static void idaapi enter_identical(void *obj,uint32 n)
 
 static void idaapi enter_unmatch(void *obj,uint32 n)
 {
-	slist_t * sl = ((deng_t *)obj)->ulist;
+	psig_t *sig = ui_access_sig(((deng_t *)obj)->ulist, n);
 
-	if (sl->sigs[n-1]->nfile == 1)
-		jumpto(sl->sigs[n-1]->startEA);
+	if (sig->nfile == 1)
+		jumpto(sig->startEA);
 	else
 		os_copy_to_clipboard(NULL);
 }
@@ -206,7 +224,7 @@ static uint32 idaapi graph_list(slist_t * sl,uint32 n, options_t * opt)
 	slist_t * sl2 = NULL;
 
 	msg ("parsing second function...\n");
-	sl2 = parse_second_fct(sl->sigs[n-1]->msig->startEA, sl->file, opt);
+	sl2 = parse_second_fct(ui_access_sig(sl, n)->msig->startEA, sl->file, opt);
 	if (!sl2)
 	{
 		msg("Error: FCT2 parsing failed.\n");
@@ -214,7 +232,7 @@ static uint32 idaapi graph_list(slist_t * sl,uint32 n, options_t * opt)
 	}
 
 	msg ("parsing first function...\n");
-	sl1 = parse_fct(sl->sigs[n-1]->startEA, dto.graph.s_showpref);
+	sl1 = parse_fct(ui_access_sig(sl, n)->startEA, dto.graph.s_showpref);
 	if (!sl1)
 	{
 		msg("Error: FCT1 parsing failed.\n");
@@ -279,10 +297,10 @@ static void idaapi graph_unmatch(void *obj,uint32 n)
 {
 	slist_t * sl = NULL, * tmp = ((deng_t *)obj)->ulist;
 
-	if (tmp->sigs[n-1]->nfile == 2)
+	if (ui_access_sig(tmp, n)->nfile == 2)
 	{
 		msg ("parsing second function...\n");
-		sl = parse_second_fct(tmp->sigs[n-1]->startEA, tmp->file, ((deng_t *)obj)->opt);
+		sl = parse_second_fct(ui_access_sig(tmp, n)->startEA, tmp->file, ((deng_t *)obj)->opt);
 		if (!sl)
 		{
 			msg("Error: FCT2 parsing failed.\n");
@@ -294,7 +312,7 @@ static void idaapi graph_unmatch(void *obj,uint32 n)
 	else
 	{
 		msg ("parsing first function...\n");
-		sl = parse_fct(tmp->sigs[n-1]->startEA, dto.graph.s_showpref);
+		sl = parse_fct(ui_access_sig(tmp, n)->startEA, dto.graph.s_showpref);
 		if (!sl)
 		{
 			msg("Error: FCT1 parsing failed.\n");
@@ -319,17 +337,19 @@ static uint32 idaapi res_unmatch(deng_t * d,uint32 n, int type)
 		sl = d->ilist;
 	else
 		sl = d->mlist;
+
+	psig_t *sig = ui_access_sig(sl, n);
 	
-	sl->sigs[n-1]->nfile = 1;
-	sl->sigs[n-1]->msig->nfile = 2;
+	sig->nfile = 1;
+	sig->msig->nfile = 2;
 
-	siglist_add(d->ulist, sl->sigs[n-1]);
-	siglist_add(d->ulist, sl->sigs[n-1]->msig);
+	siglist_add(d->ulist, sig);
+	siglist_add(d->ulist, sig->msig);
 
-	sl->sigs[n-1]->msig->msig = NULL;
-	sl->sigs[n-1]->msig = NULL;
+	sig->msig->msig = NULL;
+	sig->msig = NULL;
 
-	siglist_remove(sl, n-1);
+	siglist_remove(sl, n - 1);
 
 	refresh_chooser(title_unmatch);
 
@@ -448,7 +468,7 @@ static uint32 idaapi res_match(void *obj,uint32 n)
 	option = 1;
 	if (AskUsingForm_c(format, &ea, &option))
 	{
-		s1 = eng->ulist->sigs[n-1];
+		s1 = ui_access_sig(eng->ulist, n);
 
 		for (i=0; i<eng->ulist->num; i++)
 		{
@@ -483,11 +503,12 @@ static uint32 idaapi res_match(void *obj,uint32 n)
 static uint32 idaapi res_mtoi(void *obj,uint32 n)
 {
 	deng_t * d = (deng_t *)obj;
+	psig_t *sig = ui_access_sig(d->mlist, n);
 
-	d->mlist->sigs[n-1]->mtype = d->mlist->sigs[n-1]->msig->mtype = DIFF_MANUAL;
+	sig->mtype = sig->msig->mtype = DIFF_MANUAL;
 
-	siglist_add(d->ilist, d->mlist->sigs[n-1]);
-	siglist_remove(d->mlist, n-1);
+	siglist_add(d->ilist, sig);
+	siglist_remove(d->mlist, n - 1);
 
 	refresh_chooser(title_identical);
 
@@ -504,11 +525,12 @@ static uint32 idaapi res_mtoi(void *obj,uint32 n)
 static uint32 idaapi res_itom(void *obj,uint32 n)
 {
 	deng_t * d = (deng_t *)obj;
+	psig_t *sig = ui_access_sig(d->ilist, n);
 
-	d->ilist->sigs[n-1]->mtype = d->ilist->sigs[n-1]->msig->mtype = DIFF_MANUAL;
+	sig->mtype = sig->msig->mtype = DIFF_MANUAL;
 
-	siglist_add(d->mlist, d->ilist->sigs[n-1]);
-	siglist_remove(d->ilist, n-1);
+	siglist_add(d->mlist, sig);
+	siglist_remove(d->ilist, n - 1);
 
 	refresh_chooser(title_match);
 
@@ -523,8 +545,9 @@ static uint32 idaapi res_itom(void *obj,uint32 n)
 
 static uint32 idaapi res_flagged(void *obj,uint32 n)
 {
-	deng_t * d = (deng_t *)obj;
-	d->mlist->sigs[n-1]->flag = !d->mlist->sigs[n-1]->flag;
+	psig_t *sig = ui_access_sig(((deng_t *)obj)->mlist, n);
+
+	sig->flag = !sig->flag;
 
 	refresh_chooser(title_match);
 
@@ -539,7 +562,7 @@ static uint32 idaapi res_flagged(void *obj,uint32 n)
 
 static void display_matched(deng_t * eng)
 {
-	choose2(false,			  // non-modal window
+	choose2(CH_ATTRS,
 		-1, -1, -1, -1,       // position is determined by Windows
 		eng,                  // pass the created function list to the window
 		qnumber(header_match),// number of columns
@@ -548,23 +571,21 @@ static void display_matched(deng_t * eng)
 		desc_match,           // function that generates a line
 		title_match,	      // window title
 		-1,                   // use the default icon for the window
-		0,                    // position the cursor on the first line
+		1,                    // position the cursor on the first line
 		NULL,                 // "kill" callback
 		NULL,                 // "new" callback
 		NULL,                 // "update" callback
 		graph_match,          // "edit" callback
 		enter_match,          // function to call when the user pressed Enter
-		close,                // function to call when the window is closed
+		close_window,         // function to call when the window is closed
 		popup_match,          // use default popup menu items
 		NULL);  
 
 	eng->wnum++;
-
+	
 	add_chooser_command(title_match, "Unmatch", res_munmatch, 0, -1, CHOOSER_POPUP_MENU | CHOOSER_MENU_EDIT);
 	add_chooser_command(title_match, "Set as identical", res_mtoi, 0, -1, CHOOSER_POPUP_MENU | CHOOSER_MENU_EDIT);
 	add_chooser_command(title_match, "Flag/unflag", res_flagged, 0, -1, CHOOSER_POPUP_MENU | CHOOSER_MENU_EDIT);
-
-	enable_chooser_item_attrs(title_match, 1);
 }
 
 
@@ -575,7 +596,7 @@ static void display_matched(deng_t * eng)
 
 static void display_identical(deng_t * eng)
 {
-	choose2(false,			  // non-modal window
+	choose2(0,
 		-1, -1, -1, -1,       // position is determined by Windows
 		eng,                  // pass the created function list to the window
 		qnumber(header_match),// number of columns
@@ -584,18 +605,18 @@ static void display_identical(deng_t * eng)
 		desc_identical,       // function that generates a line
 		title_identical,	  // window title
 		-1,                   // use the default icon for the window
-		0,                    // position the cursor on the first line
+		1,                    // position the cursor on the first line
 		NULL,                 // "kill" callback
 		NULL,                 // "new" callback
 		NULL,                 // "update" callback
 		graph_identical,      // "edit" callback
 		enter_identical,      // function to call when the user pressed Enter
-		close,                // function to call when the window is closed
+		close_window,         // function to call when the window is closed
 		popup_match,          // use default popup menu items
 		NULL);  
 
 	eng->wnum++;
-
+	
 	add_chooser_command(title_identical, "Unmatch", res_iunmatch, 0, -1, CHOOSER_POPUP_MENU | CHOOSER_MENU_EDIT);
 	add_chooser_command(title_identical, "Set as matched", res_itom, 0, -1, CHOOSER_POPUP_MENU | CHOOSER_MENU_EDIT);
 }
@@ -608,7 +629,7 @@ static void display_identical(deng_t * eng)
 
 static void display_unmatched(deng_t * eng)
 {
-	choose2(false,			  // non-modal window
+	choose2(0,
 		-1, -1, -1, -1,       // position is determined by Windows
 		eng,                  // pass the created function list to the window
 		qnumber(header_unmatch),// number of columns
@@ -617,18 +638,18 @@ static void display_unmatched(deng_t * eng)
 		desc_unmatch,         // function that generates a line
 		title_unmatch,	      // window title
 		-1,                   // use the default icon for the window
-		0,                    // position the cursor on the first line
+		1,                    // position the cursor on the first line
 		NULL,                 // "kill" callback
 		NULL,                 // "new" callback
 		NULL,                 // "update" callback
 		graph_unmatch,        // "edit" callback
 		enter_unmatch,        // function to call when the user pressed Enter
-		close,                // function to call when the window is closed
+		close_window,         // function to call when the window is closed
 		popup_unmatch,        // use default popup menu items
 		NULL);                // use the same icon for all lines
 
 	eng->wnum++;
-
+	
 	add_chooser_command(title_unmatch, "Set match", res_match, 0, -1, CHOOSER_POPUP_MENU | CHOOSER_MENU_EDIT);
 }
 
@@ -648,8 +669,8 @@ int idaapi ui_callback(void * data, int event_id, va_list va)
 	  if (attrs != NULL)
 	  {
 		deng_t * d = (deng_t *)co;
-		if (d && d->magic == 0x0BADF00D)
-			if (d->mlist->sigs[n-1]->flag == 1)
+		if (d && d->magic == 0x0BADF00D && n > 0)
+			if (ui_access_sig(d->mlist, n)->flag == 1)
 				attrs->color = 0x908070;
 	  }
   }

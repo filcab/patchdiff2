@@ -19,13 +19,10 @@
 
 #pragma once
 
-// hmm patchdiff2 originally did this...lol... :/
-#ifdef NO_OBSOLETE_FUNCS
-#undef NO_OBSOLETE_FUNCS
-#endif
-
 #include <stdio.h>
 #include <stack>
+
+#define NO_OBSOLETE_FUNCS
 
 #include <ida.hpp>
 #include <idp.hpp>
@@ -48,3 +45,5 @@
 #pragma warning(disable: 4800)
 #include <graph.hpp>
 #pragma warning(pop)
+
+static_assert(IDA_SDK_VERSION == 630, "This plugin expects IDA SDK 6.3");

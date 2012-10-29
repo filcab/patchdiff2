@@ -198,6 +198,12 @@
     <ClCompile Include="..\win_fct.cpp" />
     <ClCompile Include="..\x86.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Changelog.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\makefile" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

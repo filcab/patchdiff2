@@ -83,8 +83,8 @@ static int idaapi graph_callback(void * ud, int code, va_list va)
 
 	case grcode_changed_current:
 		{
-			graph_viewer_t *v = va_arg(va, graph_viewer_t *);
-			int node       = va_argi(va, int);
+			graph_viewer_t *v	= va_arg (va, graph_viewer_t *);
+			int node			= va_argi(va, int);
 
 			if (node != -1)
 			{
@@ -167,7 +167,7 @@ static int idaapi graph_callback(void * ud, int code, va_list va)
 				}
 			}
 
-			result = true;
+			result = 1;
 		}
 		break;
 
@@ -181,6 +181,7 @@ static int idaapi graph_callback(void * ud, int code, va_list va)
 			slist_t * sl = (slist_t *)ud;
 
 			*text = sl->sigs[node]->dl.lines;
+
 			if ( bgcolor != NULL )
 			{
 				*bgcolor = 0xFFFFFFFF;
@@ -195,8 +196,7 @@ static int idaapi graph_callback(void * ud, int code, va_list va)
 						*bgcolor = 0x8cb4d2;
 				}
 			}
-	
-			result = true;
+			result = 1;
 			qnotused(g);
 		}
 		break;
@@ -206,8 +206,6 @@ static int idaapi graph_callback(void * ud, int code, va_list va)
 			slist_t * sl = (slist_t *)ud;
 
 			sl->gv = NULL;
-
-			result = true;
 		}
 		break;
 	}
@@ -216,47 +214,56 @@ static int idaapi graph_callback(void * ud, int code, va_list va)
 }
 
 
+template<size_t len>
+void create_form_name(char (&dst)[len], slist_t *sl, int num)
+{
+	qsnprintf(dst, len, "IDB%d: %s", num, sl->sigs[0]->name);
+}
+
+
 /*------------------------------------------------*/
 /* function : pgraph_create                       */
 /* description: Creates s function graph          */
+/* returns: true if the form was newly created    */
 /*------------------------------------------------*/
 
-static graph_viewer_t * pgraph_create(slist_t * sl, int num, slist_t * sl2, graph_viewer_t * gv_prev)
+static bool pgraph_create(slist_t *sl, int num)
 {
 	HWND hwnd = NULL;
-	char buf[512];
-	char buf2[512];
+	char form_name[512];
+	char node_name[512];
 	TForm *form;
-	graph_viewer_t *gv = NULL;
+	bool form_is_new = true;
 
-	qsnprintf(buf, sizeof(buf), "IDB%d: %s", num, sl->sigs[0]->name);
+	create_form_name(form_name, sl, num);
+	qsnprintf(node_name, sizeof(node_name), "$ %s", form_name);
 	
-	form = create_tform(buf, &hwnd);
-	if ( hwnd != NULL )
+	form = find_tform(form_name);
+
+	netnode id;
+	bool already_existed = !id.create(node_name);
+	if (form && already_existed)
 	{
-		// get a unique graph id
-		netnode id;
-		id.create();
-		gv = create_graph_viewer(form, id, graph_callback, sl, 0);
-		if (gv != NULL)
+		form_is_new = false;
+		switchto_tform(form, true);
+		sl->gv = get_graph_viewer(form);
+	}
+	else
+	{
+		form = create_tform(form_name, &hwnd);
+		if (hwnd)
 		{
-			open_tform(form, FORM_TAB|FORM_MENU);
-			
-			viewer_add_menu_item(gv, "Jump to code", menu_callback, sl, NULL, 0);
-			sl->gv = gv;
-			
-			if (sl2 != NULL)
+			sl->gv = create_graph_viewer(form, id, graph_callback, sl, 0);
+			open_tform(form, FORM_TAB|FORM_MENU|FORM_QWIDGET);
+			if (sl->gv)
 			{
-				qsnprintf(buf2, sizeof(buf2), "IDB%d: %s", num-1, sl2->sigs[0]->name);	
-				set_dock_pos(buf, buf2, DP_RIGHT);
+				viewer_fit_window(sl->gv);
+				viewer_add_menu_item(sl->gv, "Jump to code", menu_callback, sl, NULL, 0);			
 			}
-			if (gv_prev != NULL) viewer_fit_window(gv_prev);
-			viewer_fit_window(gv);
-			
 		}
 	}
 
-	return gv;
+	return form_is_new;
 }
 
 
@@ -274,8 +281,17 @@ void pgraph_display(slist_t * sl1, slist_t * sl2)
 
 	sl1->unique = sl2->unique = false;
 
-	gv = pgraph_create(sl1, 1, NULL, NULL);
-	pgraph_create(sl2, 2, sl1, gv);
+	bool sl1_new_form = pgraph_create(sl1, 1);
+	bool sl2_new_form = pgraph_create(sl2, 2);
+	if ((sl1_new_form || sl2_new_form) &&
+		sl1->gv && sl2->gv)
+	{
+		// Only perform the docking for forms that were just created
+		char buf[512], buf2[512];
+		create_form_name(buf, sl1, 1);
+		create_form_name(buf2, sl2, 2);
+		set_dock_pos(buf2, buf, DP_RIGHT);
+	}
 }
 
 
@@ -284,5 +300,5 @@ void pgraph_display_one(slist_t * sl)
 	sl->msl = NULL;
 	sl->unique = true;
 
-	pgraph_create(sl, sl->sigs[0]->nfile, NULL, NULL);
+	pgraph_create(sl, sl->sigs[0]->nfile);
 }

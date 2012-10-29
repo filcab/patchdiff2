@@ -489,7 +489,7 @@ char get_byte_with_optimization(ea_t ea)
 		return ppc_get_byte(ea);
 	default:
 		{
-			ua_ana0(ea);
+			decode_insn(ea);
 			return (char)cmd.itype;
 		}
 	}
@@ -523,7 +523,7 @@ int dline_add(dline_t * dl, ea_t ea, char options)
 	f = getFlags(ea);
 	generate_disasm_line(ea, dis, sizeof(dis));
 
-	ua_ana0(ea);
+	decode_insn(ea);
 	init_output_buffer(buf, sizeof(buf));
 
 	// Adds block label
@@ -580,7 +580,7 @@ int sig_add_address(psig_t * sig, short opcodes[256], ea_t ea, bool b, bool line
 {
 	unsigned char byte;
 	unsigned char buf[200];
-	size_t s, i;
+	uint32 s, i;
 	bool call;
 	bool cj;
 	ea_t tea;
@@ -609,7 +609,7 @@ int sig_add_address(psig_t * sig, short opcodes[256], ea_t ea, bool b, bool line
 		}
 		else
 		{
-			s = get_item_size(ea);
+			s = (uint32)get_item_size(ea);
 			if (s > sizeof(buf)) s = sizeof(buf);
 			get_many_bytes(ea, buf, s);
 		}
@@ -629,11 +629,10 @@ int sig_add_address(psig_t * sig, short opcodes[256], ea_t ea, bool b, bool line
 			f = getFlags(tea);
 			if (isASCII(f))
 			{
-				long strtype;
-
-				get_typeinfo(tea, 0, f, (typeinfo_t *)&strtype);
-				s = get_max_ascii_length(tea, strtype);
-				if (!get_ascii_contents(tea, s, strtype, (char *)buf, sizeof(buf)))
+				opinfo_t op_info;
+				get_opinfo(tea, 0, f, &op_info);
+				s = get_max_ascii_length(tea, op_info.strtype);
+				if (!get_ascii_contents2(tea, s, op_info.strtype, buf, sizeof(buf)))
 					s = sizeof(buf);
 
 				for (i=0; i<s; i++)

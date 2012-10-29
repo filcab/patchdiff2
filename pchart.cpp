@@ -85,7 +85,7 @@ bool pflow_chart_t::getJump(func_t * fct, qvector<ea_t> & list, pbasic_block_t &
 	ea_t tea, ea = bl.endEA, end, jaddr;
 	flags_t f;
 	size_t k;
-	int type;
+	int type = 0;
 	int cond;
 
 	j = flow = false;
@@ -134,6 +134,8 @@ bool pflow_chart_t::getJump(func_t * fct, qvector<ea_t> & list, pbasic_block_t &
 				else if (ed.ea == end)
 					pos = tmp.begin();
 
+				assert(ed.type != 0);
+				
 				tmp.insert(pos, ed);
 			}
 		}

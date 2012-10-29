@@ -58,7 +58,8 @@ public:
 
 		return -1;
 	}
-	int idaapi npred(int node) const { return 0; } //int(blocks[node].pred.size()); }
+	//int idaapi npred(int node) const { return (int)blocks[node].pred.size(); }
+	int idaapi npred(int) const { return 0; }
 	int idaapi pred(int node, int i) const
 	{ 
 		return -1;
