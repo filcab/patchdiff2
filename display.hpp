@@ -75,6 +75,6 @@ static const char* title_identical = "Identical Functions";
 
 void display_results(deng_t *);
 
-int ui_callback(void * data, int event_id, va_list va);
+int idaapi ui_callback(void * data, int event_id, va_list va);
 
 #endif

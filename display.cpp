@@ -640,7 +640,7 @@ static void display_unmatched(deng_t * eng)
 /* description: Catchs lists to change bg color   */
 /*------------------------------------------------*/
 
-int ui_callback(void * data, int event_id, va_list va)
+int idaapi ui_callback(void * data, int event_id, va_list va)
 {
   if ( event_id == ui_get_chooser_item_attrs )  
   {

@@ -243,7 +243,7 @@ static graph_viewer_t * pgraph_create(slist_t * sl, int num, slist_t * sl2, grap
 		gv = create_graph_viewer(form, id, graph_callback, sl, 0);
 		if (gv != NULL)
 		{
-			open_tform(form, FORM_MDI|FORM_TAB|FORM_MENU);
+			open_tform(form, FORM_TAB|FORM_MENU);
 			
 			viewer_add_menu_item(gv, "Jump to code", menu_callback, sl, NULL, 0);
 			sl->gv = gv;
