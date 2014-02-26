@@ -1,7 +1,8 @@
 # Usage: make IDASDK=/path/to/IDA/sdk
 NAME = patchdiff2
 
-SOURCES = $(notdir $(wildcard *.cpp *.cc *.c))
+# By default assume we're not compiling on Windows with Makefiles
+SOURCES = $(filter-out win_fct.cpp,$(notdir $(wildcard *.cpp *.cc *.c)))
 
 COMMON_FLAGS = -D__IDP__ -D__PLUGIN__ -D__MAC__ -D__EA64__ -I$(IDAINC)
 CFLAGS = $(COMMON_FLAGS)
