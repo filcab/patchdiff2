@@ -1,6 +1,8 @@
 # Usage: make IDASDK=/path/to/IDA/sdk
 NAME = patchdiff2
 
+# TODO: Make it build 32 and 64-bit binaries
+
 # By default assume we're not compiling on Windows with Makefiles
 SOURCES = $(filter-out win_fct.cpp,$(notdir $(wildcard *.cpp *.cc *.c)))
 
