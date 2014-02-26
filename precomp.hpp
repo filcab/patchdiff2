@@ -46,4 +46,4 @@
 #include <graph.hpp>
 #pragma warning(pop)
 
-static_assert(IDA_SDK_VERSION == 630, "This plugin expects IDA SDK 6.3");
+static_assert(IDA_SDK_VERSION == 650, "This plugin expects IDA SDK 6.5");
