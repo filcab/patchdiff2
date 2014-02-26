@@ -19,10 +19,19 @@ IDAPLUGINS = $(IDALIB)/plugins
 BaseNameSources := $(sort $(basename $(SOURCES)))
 ObjectsO  := $(BaseNameSources:%=%.o)
 
-.PHONY: all clean
+.PHONY: all install uninstall clean
 
-all: $(NAME).pmc
-$(NAME).pmc: $(ObjectsO)
+OUTPUT = $(NAME).pmc
+all: $(OUTPUT)
+
+$(OUTPUT): $(ObjectsO)
+	$(LD) $(LDFLAGS) -o $@
+
+install: $(OUTPUT)
+	cp $(OUTPUT) "$(IDAPLUGINS)"
+
+uninstall:
+	rm "$(IDAPLUGINS)/$(OUTPUT)"
 
 clean:
 	rm -f $(ObjectsO) $(OUTPUT)
