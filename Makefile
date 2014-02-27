@@ -18,35 +18,47 @@ IDAAPP ?= /Applications/IDA Pro 6.5/idaq.app
 IDALIB  = $(IDAAPP)/Contents/MacOS
 IDAPLUGINS = $(IDALIB)/plugins
 
+OUTPUTS = $(NAME).pmc $(NAME).pmc64
+all: $(OUTPUTS)
+
+ifndef VERBOSE
+  Verb := @
+endif
+Echo := @echo
+
 BaseNameSources := $(sort $(basename $(SOURCES)))
 Objects32  := $(BaseNameSources:%=%.32.o)
 Objects64  := $(BaseNameSources:%=%.64.o)
 
 .PHONY: all install uninstall clean
 
-OUTPUTS = $(NAME).pmc $(NAME).pmc64
-all: $(OUTPUTS)
-
 $(NAME).pmc: LIBIDA=ida
 $(NAME).pmc: $(Objects32)
-	$(LD) $(LDFLAGS) -o $@ $+
+	$(Echo) Linking $@
+	$(Verb) $(LD) $(LDFLAGS) -o $@ $+
 
 $(NAME).pmc64: EA64=-D__EA64__
 $(NAME).pmc64: LIBIDA=ida64
 $(NAME).pmc64: $(Objects64)
-	$(LD) $(LDFLAGS) -o $@ $+
+	$(Echo) Linking $@
+	$(Verb) $(LD) $(LDFLAGS) -o $@ $+
 
 %.64.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c -o $@ $^
+	$(Echo) Compiling $*.cpp for 64-bit build
+	$(Verb) $(CXX) $(CXXFLAGS) -c -o $@ $^
 %.32.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c -o $@ $^
+	$(Echo) Compiling $*.cpp for 32-bit build
+	$(Verb) $(CXX) $(CXXFLAGS) -c -o $@ $^
 
 install: $(OUTPUTS)
-	cp $(OUTPUTS) "$(IDAPLUGINS)"
+	$(Echo) Installing $(OUTPUTS) to $(IDAPLUGINS)
+	$(Verb) cp $(OUTPUTS) "$(IDAPLUGINS)"
 
 uninstall:
-	rm "$(IDAPLUGINS)/$(OUTPUTS)"
+	$(Echo) Removing "$(IDAPLUGINS)/$(OUTPUTS)"
+	$(Verb) rm $(OUTPUTS:%="$(IDAPLUGINS)/%")
 
+# Don't hide the clean command
 clean:
 	rm -f $(Objects32) $(Objects64) $(OUTPUTS)
 
