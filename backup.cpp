@@ -323,7 +323,7 @@ static size_t pair_unserialize(char * buf, size_t blen, psig_t ** s, int version
 /*              netnode                           */
 /*------------------------------------------------*/
 
-static void backup_save_list(char * node_name, slist_t * sl)
+static void backup_save_list(const char *node_name, slist_t * sl)
 {
 	char buf[5000];
 	size_t i;
@@ -363,7 +363,7 @@ static void backup_save_list(char * node_name, slist_t * sl)
 /* description: Loads result list from a netnode  */
 /*------------------------------------------------*/
 
-static bool backup_load_list(char * node_name, slist_t * sl, int type, int version)
+static bool backup_load_list(const char *node_name, slist_t * sl, int type, int version)
 {
 	char buf[5000];
 	size_t i;
@@ -410,7 +410,7 @@ static bool backup_load_list(char * node_name, slist_t * sl, int type, int versi
 /* description: Removes node from the IDB         */
 /*------------------------------------------------*/
 
-static void backup_free_node(char * node_name, size_t size)
+static void backup_free_node(const char *node_name, size_t size)
 {
 	netnode node;
 	size_t i;
@@ -449,7 +449,7 @@ static void backup_cleanup(deng_t * eng)
 /* description:Saves engine data inside a netnode */
 /*------------------------------------------------*/
 
-static void backup_save_eng(char * node_name, deng_t * eng)
+static void backup_save_eng(const char *node_name, deng_t * eng)
 {
 	char buf[1000];
 	char * file;
@@ -511,7 +511,7 @@ static void backup_save_eng(char * node_name, deng_t * eng)
 /* description:Loads engine data inside a netnode */
 /*------------------------------------------------*/
 
-static deng_t * backup_load_eng(char * node_name, options_t * opt, int * version)
+static deng_t * backup_load_eng(const char *node_name, options_t * opt, int * version)
 {
 	char buf[1000];
 	deng_t * eng;
