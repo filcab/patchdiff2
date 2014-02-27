@@ -1,17 +1,17 @@
-/* 
+/*
    Patchdiff2
    Portions (C) 2010 Nicolas Pouvesle
    Portions (C) 2007 - 2009 Tenable Network Security, Inc.
-   
+
    This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License version 2 as 
+   it under the terms of the GNU General Public License version 2 as
    published by the Free Software Foundation.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -104,7 +104,7 @@ bool os_check_process(pid_t pid)
 {
   if (kill(pid, 0) == 0)
     return true;
-  
+
   return false;
 }
 
@@ -183,7 +183,7 @@ bool os_ipc_recv(void * data, int type, idata_t * d)
   fd_set rfds, efds;
   struct timeval tv;
   int ret;
-  
+
   tv.tv_sec = 0;
   tv.tv_usec = 1000;
 
@@ -200,7 +200,7 @@ bool os_ipc_recv(void * data, int type, idata_t * d)
 	  ret = select(id->rpipe+1, &rfds, NULL, &efds, &tv);
 	  if (ret > 0 && FD_ISSET(id->rpipe, &rfds))
 	    break;
-	  
+
 	  if (ret < 0 || (ret > 0 && FD_ISSET(id->rpipe, &efds)) || !os_check_process(id->pid))
 	    return false;
 	}
@@ -217,9 +217,9 @@ bool os_ipc_recv(void * data, int type, idata_t * d)
       if (!(ret > 0 && FD_ISSET(id->rpipe, &rfds)))
 	return false;
     }
-  
+
   read(id->rpipe, d, sizeof(*d));
-  
+
   return true;
 }
 
