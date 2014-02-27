@@ -429,11 +429,13 @@ bool is_jump(psig_t * sig, ea_t ea, bool * call, bool * cj)
 	if (xb.first_from(ea, XREF_FAR))
 	{
 		cr = (cref_t)xb.type;
-		if (xb.iscode && (cr == fl_JF || cr == fl_JN))
-			if (ignore_jump(ea))
+		if (xb.iscode && (cr == fl_JF || cr == fl_JN)) {
+			if (ignore_jump(ea)) {
 				return true;
-			else
+            } else {
 				*cj = true;
+            }
+        }
 
 		if (xb.iscode && (cr == fl_CF || cr == fl_CN))
 		{
