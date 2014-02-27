@@ -1261,7 +1261,7 @@ int siglist_save(slist_t * sl, const char * filename)
 /* description: Loads signature list from disk    */
 /*------------------------------------------------*/
 
-slist_t * siglist_load(const char * filename)
+slist_t * siglist_load(const char *filename)
 {
 	FILE * fp;
 	slist_t * sl;

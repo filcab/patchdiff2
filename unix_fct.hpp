@@ -30,7 +30,7 @@
 
 
 // Preference functions
-bool os_get_pref_int(char *, int *);
+bool os_get_pref_int(const char *, int *);
 
 // System functions
 int os_execute_command(char *, bool, void *);

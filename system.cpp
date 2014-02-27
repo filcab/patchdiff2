@@ -268,7 +268,7 @@ slist_t * system_parse_idb(ea_t ea, char * file, options_t * opt)
 /* description: Gets global system preference     */
 /*------------------------------------------------*/
 
-bool system_get_pref(char * name, void * data, int type)
+bool system_get_pref(const char *name, void * data, int type)
 {
 	if (type == SPREF_INT)
 	{

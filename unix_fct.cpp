@@ -48,13 +48,14 @@ typedef struct ipc_data ipc_data_t;
 pid_t create_process(char * cmd)
 {
   pid_t pid;
-  char * argv[4];
-  
+  char *argv[4];
+
   pid = fork();
   if (pid == 0)
     {
-      argv[0] = "/bin/sh";
-      argv[1] = "-c";
+      // Assume execvp is safe to call with const char strings
+      argv[0] = const_cast<char*>("/bin/sh");
+      argv[1] = const_cast<char*>("-c");
       argv[2] = cmd;
       argv[3] = NULL;
 
@@ -300,7 +301,7 @@ bool os_ipc_close(void * data)
 /* description: Gets system preferences (integer) */
 /*------------------------------------------------*/
 
-bool os_get_pref_int(char * name, int * i)
+bool os_get_pref_int(const char *name, int * i)
 {
   *i = 0;
   return false;

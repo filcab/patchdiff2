@@ -52,7 +52,7 @@ struct idata
 typedef struct idata idata_t;
 
 
-bool system_get_pref(char *, void *, int);
+bool system_get_pref(const char *, void *, int);
 slist_t * system_parse_idb(ea_t, char *, options_t *);
 
 bool ipc_init(char *, int, long);
