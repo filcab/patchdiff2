@@ -147,12 +147,12 @@ int os_unlink(const char * path)
 /* description: returns a temporary file name     */
 /*------------------------------------------------*/
 
-void os_tempnam(char * data, size_t size, char * suffix)
+void os_tempnam(char *data, size_t size, const char *suffix)
 {
-	char * str;
+	char * str = strdup("patchdiff2-XXXXXX");;
 
-        str = tempnam(NULL, NULL);
-        qsnprintf(data, size, "%s%s", str, suffix);
+	int ret = mkstemp(str);
+	qsnprintf(data, size, "%s%s", str, suffix);
 }
 
 
