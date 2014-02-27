@@ -66,7 +66,7 @@ static int system_execute_second_instance(char * idc, ea_t ea, char * file, bool
 	if (generate_idc_file(idc))
 		return -1;
 
-	qsnprintf(cmd, sizeof(cmd), "%s -A -S\"%s\" -Opatchdiff2:%ld:%" PRIea_t ":%u:\"%s\" \"%s\"",
+	qsnprintf(cmd, sizeof(cmd), "\"%s\" -A -S\"%s\" -Opatchdiff2:%ld:%" PRIea_t ":%u:\"%s\" \"%s\"",
 									path,
 									idc,
 									id,
