@@ -107,11 +107,11 @@ static void idaapi desc_dlist(slist_t * sl,uint32 n,char * const *arrptr)
 		qsnprintf(arrptr[0], MAXSTR, "%u", sig->mtype);
 		qsnprintf(arrptr[1], MAXSTR, "%s", sig->name);
 		qsnprintf(arrptr[2], MAXSTR, "%s", sig->msig->name);
-		qsnprintf(arrptr[3], MAXSTR, "%a", sig->startEA);
-		qsnprintf(arrptr[4], MAXSTR, "%a", sig->msig->startEA);
+		qsnprintf(arrptr[3], MAXSTR, "%" PRIea_t, sig->startEA);
+		qsnprintf(arrptr[4], MAXSTR, "%" PRIea_t, sig->msig->startEA);
 		qsnprintf(arrptr[5], MAXSTR, "%c", sig->id_crc ? '+' : '-');
-		qsnprintf(arrptr[6], MAXSTR, "%a", sig->crc_hash);
-		qsnprintf(arrptr[7], MAXSTR, "%a", sig->msig->crc_hash);
+		qsnprintf(arrptr[6], MAXSTR, "%lx", sig->crc_hash);
+		qsnprintf(arrptr[7], MAXSTR, "%lx", sig->msig->crc_hash);
 	}
 }
 
@@ -162,10 +162,10 @@ static void idaapi desc_unmatch(void *obj,uint32 n,char * const *arrptr)
 		psig_t *sig = ui_access_sig(((deng_t *)obj)->ulist, n);
 		qsnprintf(arrptr[0], MAXSTR, "%u", sig->nfile);
 		qsnprintf(arrptr[1], MAXSTR, "%s", sig->name);
-		qsnprintf(arrptr[2], MAXSTR, "%a", sig->startEA);
-		qsnprintf(arrptr[3], MAXSTR, "%.8X", sig->sig);
-		qsnprintf(arrptr[4], MAXSTR, "%.8X", sig->hash);
-		qsnprintf(arrptr[5], MAXSTR, "%.8X", sig->crc_hash);
+		qsnprintf(arrptr[2], MAXSTR, "%" PRIea_t, sig->startEA);
+		qsnprintf(arrptr[3], MAXSTR, "%.8lX", sig->sig);
+		qsnprintf(arrptr[4], MAXSTR, "%.8lX", sig->hash);
+		qsnprintf(arrptr[5], MAXSTR, "%.8lX", sig->crc_hash);
 	}
 }
 
@@ -486,7 +486,7 @@ static uint32 idaapi res_match(void *obj,uint32 n)
 			return 1;
 		}
 
-		warning("Address '%a' is not valid.", ea);
+		warning("Address '%" PRIea_t "' is not valid.", ea);
 		return 0;
 	}
 

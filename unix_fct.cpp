@@ -241,9 +241,9 @@ bool os_ipc_init(void ** data, long pid, int type)
 
   memset(id, '\0', sizeof(*id));
 	
-  qsnprintf(sname, sizeof(sname), "/tmp/pdiff2spipe%u", pid);
-  qsnprintf(rname, sizeof(rname), "/tmp/pdiff2rpipe%u", pid);
-  
+  qsnprintf(sname, sizeof(sname), "/tmp/pdiff2spipe%ld", pid);
+  qsnprintf(rname, sizeof(rname), "/tmp/pdiff2rpipe%ld", pid);
+
   id->sname = qstrdup(sname);
   id->rname = qstrdup(rname);
 

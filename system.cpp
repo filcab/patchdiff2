@@ -66,7 +66,7 @@ static int system_execute_second_instance(char * idc, ea_t ea, char * file, bool
 	if (generate_idc_file(idc))
 		return -1;
 
-	qsnprintf(cmd, sizeof(cmd), "%s -A -S\"%s\" -Opatchdiff2:%u:%a:%u:\"%s\" \"%s\"", 
+	qsnprintf(cmd, sizeof(cmd), "%s -A -S\"%s\" -Opatchdiff2:%ld:%" PRIea_t ":%u:\"%s\" \"%s\"",
 									path,
 									idc,
 									id,
@@ -227,7 +227,7 @@ static void ipc_execute_second_instance(char * idc, ea_t ea, char * file)
 	if (!ipc_init(file, 1, 0))
 		return;
 
-	qsnprintf(cmd, sizeof(cmd), "%u:%a:%u:%s", 
+	qsnprintf(cmd, sizeof(cmd), "%u:%" PRIea_t ":%u:%s",
 									0,
 									ea,
 									dto.graph.s_showpref,

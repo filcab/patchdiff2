@@ -148,7 +148,7 @@ static void run_second_instance(const char * options)
 	bool cont;
 	char tmp[QMAXPATH*4];
 	
-	qsscanf(options, "%u:%a:%u:%s", &id, &ea, &v, file);
+	qsscanf(options, "%lu:%" PRIea_t ":%u:%s", &id, &ea, &v, file);
 	opt = (unsigned char)v;
 	
 	if (id)
