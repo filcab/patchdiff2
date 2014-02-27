@@ -1,9 +1,6 @@
 # Usage: make IDASDK=/path/to/IDA/sdk
 NAME = patchdiff2
 
-# TODO: Make it build 32 and 64-bit binaries
-# TODO: Fix compilation of both libraries on one command
-
 # By default assume we're not compiling on Windows with Makefiles
 SOURCES = $(filter-out win_fct.cpp,$(notdir $(wildcard *.cpp *.cc *.c)))
 
@@ -38,7 +35,9 @@ $(NAME).pmc64: LIBIDA=ida64
 $(NAME).pmc64: $(Objects64)
 	$(LD) $(LDFLAGS) -o $@ $+
 
-%.32.o %.64.o: %.cpp
+%.64.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $^
+%.32.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $^
 
 install: $(OUTPUTS)
