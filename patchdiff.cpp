@@ -208,7 +208,7 @@ char wanted_hotkey[] = "Ctrl-8";
 plugin_t PLUGIN =
 {
 	IDP_INTERFACE_VERSION,
-	PLUGIN_MOD | PLUGIN_FIX,
+	PLUGIN_MOD | PLUGIN_PROC,
 	init,
 	term,
 	run,
