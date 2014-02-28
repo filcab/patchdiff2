@@ -20,6 +20,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <stdio.h>
 
 #include <ida.hpp>
 #include <kernwin.hpp>
@@ -149,10 +150,12 @@ int os_unlink(const char * path)
 
 void os_tempnam(char *data, size_t size, const char *suffix)
 {
-	char * str = strdup("patchdiff2-XXXXXX");;
+	char *str = strdup(P_tmpdir "patchdiff2-XXXXXX");;
 
-	int ret = mkstemp(str);
-	qsnprintf(data, size, "%s%s", str, suffix);
+	// TODO: Just use mktemp and don't mind the lack of extension
+	char *tempname = mktemp(str);
+	qsnprintf(data, size, "%s%s", tempname, suffix);
+	free(tempname);
 }
 
 
