@@ -103,15 +103,15 @@ bool pflow_chart_t::getJump(func_t * fct, qvector<ea_t> & list, pbasic_block_t &
 		{
 			pedge_t ed;
 
-			if (cr == fl_JF || cr == fl_JN)
-			{
+			if (cr == fl_JF || cr == fl_JN) {
 				j = true;
 				type = 1;
-			}
-			else if (! (f & FF_JUMP))
-			{
+			} else if (! (f & FF_JUMP)) {
 				flow = true;
 				type = 2;
+			} else {
+				flow = false;
+				type = 3;
 			}
 
 			if (patchdiff_cpu == CPU_X8632 || patchdiff_cpu == CPU_X8664 || get_func_chunknum(fct, xb.to) >= 0)
@@ -134,6 +134,7 @@ bool pflow_chart_t::getJump(func_t * fct, qvector<ea_t> & list, pbasic_block_t &
 				else if (ed.ea == end)
 					pos = tmp.begin();
 
+				// TODO: We hit this assert.
 				assert(ed.type != 0);
 				
 				tmp.insert(pos, ed);
