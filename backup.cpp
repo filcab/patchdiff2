@@ -267,7 +267,7 @@ static size_t singleton_unserialize(char * buf, size_t blen, psig_t ** s, int ve
 			buffer_unserialize_string(buf, blen, &pos, &(*s)->name);
 		else
 		{
-			qsnprintf(tmp, sizeof(tmp), "sub_%" PRIea_t, (*s)->startEA);
+			qsnprintf(tmp, sizeof(tmp), "sub_%a", (*s)->startEA);
 			sig_set_name((*s), tmp);
 		}
 	}

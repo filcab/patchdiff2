@@ -48,10 +48,3 @@
 
 static_assert(IDA_SDK_VERSION == 650, "This plugin expects IDA SDK 6.5");
 
-
-// Define PRIea_t like the PRI family of constants
-#ifdef __EA64__
-#define PRIea_t "llx"
-#else
-#define PRIea_t "x"
-#endif

@@ -538,7 +538,7 @@ int dline_add(dline_t * dl, ea_t ea, char options)
 
 	if (options)
 	{
-		qsnprintf(addr, sizeof(addr), "%" PRIea_t, ea);
+		qsnprintf(addr, sizeof(addr), "%a", ea);
 		out_snprintf("%s ", addr);
 	}
 
@@ -795,7 +795,7 @@ psig_t * sig_class_generate(ea_t ea)
 	sig_set_start(sig, ea);
 
 	// Adds function name
-	qsnprintf(buf, sizeof(buf), "sub_%" PRIea_t, ea);
+	qsnprintf(buf, sizeof(buf), "sub_%a", ea);
 	sig_set_name(sig, buf);
 
 	// Adds class references
