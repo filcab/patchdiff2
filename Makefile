@@ -5,7 +5,7 @@ NAME = patchdiff2
 SOURCES = $(filter-out win_fct.cpp,$(notdir $(wildcard *.cpp *.cc *.c)))
 
 # Use -isystem to not warn on the crappy IDA headers
-COMMON_FLAGS = -D__PLUGIN__ -D__MAC__ -isystem "$(IDAINC)" -arch i386 $(EA64) -Werror -g
+COMMON_FLAGS = -D__PLUGIN__ -D__MAC__ -isystem "$(IDAINC)" -arch i386 $(EA64) -Werror -g -Wno-format
 CFLAGS = $(COMMON_FLAGS)
 CXXFLAGS = $(COMMON_FLAGS) -std=c++11
 # It had --shared, --no-undefined and -Wl
